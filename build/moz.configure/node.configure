@@ -1,0 +1,36 @@
+# -*- Mode: python; indent-tabs-mode: nil; tab-width: 40 -*-
+# vim: set filetype=python:
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# node
+# ====
+
+# TODO remove node.exe once bug 1382940 addresses ambiguous executables case.
+node = check_prog('NODE', ('node.exe', 'node',), allow_missing=False)
+
+
+@checking('for node version >= 8.11.1')
+@imports('os')
+@imports('re')
+def node_version(node):
+    env = dict(os.environ)
+    env['NODE_DISABLE_COLORS'] = '1'
+
+    out = check_cmd_output(node, '--version', env=env)
+
+    match = re.search(r'v(.+)$', out)
+
+    if not match:
+        raise FatalCheckError('unable to determine node version: %s' % out)
+
+    node_version = Version(match.group(1))
+
+    min_node_version = '8.11.1'
+    if not node_version >= min_node_version:
+        raise FatalCheckError('NODE must point to node %s or newer; '
+                              '%s found' % (min_node_version, node_version))
+
+    return node_version
+
