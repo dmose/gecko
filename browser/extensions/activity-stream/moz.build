@@ -28,9 +28,10 @@ if CONFIG['NODE_ENVIRONMENT']:
     GENERATED_FILES += [t]
 
     bundle = GENERATED_FILES[t]
-    bundle.script = '/python/mozbuild/mozbuild/action/yarn.py'
+    bundle.script = '/python/mozbuild/mozbuild/action/node.py'
     bundle.inputs = ['package.json']
-    bundle.flags = ['run', 'buildmc:webpack', '--', '--output-path', OBJDIR]
+    bundle.flags = ['webpack', '--config', 'webpack.system-addon.config.js',
+                    '--display-optimization-bailout', '--output-path', OBJDIR]
 
     # FINAL_TARGET_FILES forces two build invocations when we just want one
     # file_generate action to produce multiple files.  TODO: Teach FasterMake to
