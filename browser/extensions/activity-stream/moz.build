@@ -29,9 +29,9 @@ if CONFIG['NODE_ENVIRONMENT']:
 
     bundle = GENERATED_FILES[t]
     bundle.script = '/python/mozbuild/mozbuild/action/node.py'
-    bundle.inputs = ['package.json']
-    # XXX prepend buildconfig.topsrcdir
-    bundle.flags = ['node', '%s/node_modules/webpack/bin/webpack.js' % TOPSRCDIR, '--config', 'webpack.system-addon.config.js',
+    bundle.inputs = ['webpack.system-addon.config.js', 'system-addon/content-src/components/Base/Base.jsx']
+    # XXX? prepend buildconfig.topsrcdir
+    bundle.flags = ['--', '%s/node_modules/webpack/bin/webpack.js' % TOPSRCDIR, '--config', 'webpack.system-addon.config.js',
                     '--display-optimization-bailout', '--output-path', OBJDIR]
 
     # FINAL_TARGET_FILES forces two build invocations when we just want one
