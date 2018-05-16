@@ -19,10 +19,12 @@
   content/vendor/react-redux.js (./vendor/react-redux.js)
   content/data/content/assets/ (./data/content/assets/*)
   content/data/content/tippytop/ (./data/content/tippytop/*)
+#ifndef NODE_ENVIRONMENT
   content/data/content/activity-stream.bundle.js (./data/content/activity-stream.bundle.js)
 #ifndef RELEASE_OR_BETA
   content/data/content/activity-stream.bundle.js.map (./data/content/activity-stream.bundle.js.map)
 #endif
+#endif # NODE_ENVIRONMENT
 #ifdef XP_MACOSX
   content/css/activity-stream.css (./css/activity-stream-mac.css)
 #ifndef RELEASE_OR_BETA

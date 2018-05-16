@@ -47,3 +47,17 @@ module.exports = {
     "react-redux": "ReactRedux"
   }
 };
+
+// If we're running under mozilla-central's build system, resolve
+// Babel modules from the special _node/node_modules tree in the
+// object directory.
+const topobjdir = process.env["MOZ_DEVELOPER_OBJ_DIR"];
+if (topobjdir) {
+  Object.assign(module.exports, {
+    resolveLoader: {
+      modules: [
+        topobjdir + path.sep + "_node" + path.sep + "node_modules",
+      ],
+    },
+  });
+}
