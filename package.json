@@ -1,6 +1,7 @@
 {
-  "name": "mozillaeslintsetup",
-  "description": "This package file is for setup of ESLint only for editor integration.",
+  "name": "firefox",
+  "description": "This package file is for setting up node tools used for developing/building/testing firefox",
+  "private": true,
   "repository": {},
   "license": "MPL-2.0",
   "dependencies": {
