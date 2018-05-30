@@ -305,6 +305,21 @@ linux64-libdmg:
         script: build-libdmg-hfsplus.sh
         toolchain-artifact: public/build/dmg.tar.xz
 
+linux64-node:
+    description: "Node repack toolchain build"
+    treeherder:
+        kind: build
+        platform: toolchains/opt
+        symbol: TL(node)
+        tier: 1
+    worker-type: aws-provisioner-v1/gecko-{level}-b-linux
+    worker:
+        max-run-time: 1800
+    run:
+        using: toolchain-script
+        script: repack-node.sh
+        toolchain-artifact: public/build/node.tar.bz2
+
 linux64-android-sdk-linux-repack:
     description: "Android SDK (Linux) repack toolchain build"
     treeherder:
