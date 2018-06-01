@@ -45,6 +45,7 @@ jobs:
             - linux64-gcc-6
             - linux64-gcc-sixgill
             - linux64-rust
+            - linux64-node
 
     linux64-haz/debug:
         description: "Browser Hazard Analysis Linux"
@@ -65,3 +66,4 @@ jobs:
             - linux64-gcc-6
             - linux64-gcc-sixgill
             - linux64-rust
+            - linux64-node

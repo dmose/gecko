@@ -24,6 +24,7 @@ linux64/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64-plain/opt:
     description: "Linux64 Opt Plain"
@@ -52,6 +53,7 @@ linux64-plain/opt:
         - linux64-clang
         - linux64-gcc
         - linux64-rust
+        - linux64-node
 
 linux64-dmd/opt:
     description: "Linux64 DMD Opt"
@@ -83,6 +85,7 @@ linux64-dmd/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64/pgo:
     description: "Linux64 PGO"
@@ -111,6 +114,7 @@ linux64/pgo:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64-fuzzing/debug:
     description: "Linux64 Fuzzing Debug"
@@ -141,6 +145,7 @@ linux64-fuzzing/debug:
         - linux64-gcc
         - linux64-sccache
         - linux64-rust
+        - linux64-node
 
 linux64/debug:
     description: "Linux64 Debug"
@@ -169,6 +174,7 @@ linux64/debug:
         - linux64-gcc
         - linux64-sccache
         - linux64-rust
+        - linux64-node
 
 linux64-plain/debug:
     description: "Linux64 Debug Plain"
@@ -197,6 +203,7 @@ linux64-plain/debug:
         - linux64-clang
         - linux64-gcc
         - linux64-rust
+        - linux64-node
 
 linux64-devedition-nightly/opt:
     description: "Linux64 devedition Nightly"
@@ -232,6 +239,7 @@ linux64-devedition-nightly/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64-base-toolchains/opt:
     description: "Linux64 base toolchains Opt"
@@ -261,6 +269,7 @@ linux64-base-toolchains/opt:
         - linux64-gcc-6
         - linux64-rust-1.24
         - linux64-sccache
+        - linux64-node
 
 linux64-base-toolchains/debug:
     description: "Linux64 base toolchains Debug"
@@ -291,6 +300,7 @@ linux64-base-toolchains/debug:
         - linux64-gcc-6
         - linux64-rust-1.24
         - linux64-sccache
+        - linux64-node
 
 linux/opt:
     description: "Linux32 Opt"
@@ -319,6 +329,7 @@ linux/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux/debug:
     description: "Linux32 Debug"
@@ -348,6 +359,7 @@ linux/debug:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux/pgo:
     description: "Linux32 PGO"
@@ -377,6 +389,7 @@ linux/pgo:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux-rusttests/opt:
     description: "Linux32 Rust tests Opt"
@@ -411,6 +424,7 @@ linux-rusttests/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux-rusttests/debug:
     description: "Linux32 Rust tests Debug"
@@ -445,6 +459,7 @@ linux-rusttests/debug:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux-devedition-nightly/opt:
     description: "Linux32 devedition Nightly"
@@ -481,6 +496,7 @@ linux-devedition-nightly/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux-nightly/opt:
     description: "Linux32 Nightly"
@@ -515,6 +531,7 @@ linux-nightly/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 
 linux64-asan/opt:
@@ -546,6 +563,7 @@ linux64-asan/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 
 linux64-asan-fuzzing/opt:
@@ -577,6 +595,7 @@ linux64-asan-fuzzing/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64-asan-reporter-nightly/opt:
     description: "Linux64 Opt ASAN Reporter Nightly"
@@ -611,6 +630,7 @@ linux64-asan-reporter-nightly/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64-asan/debug:
     description: "Linux64 Debug ASAN"
@@ -641,6 +661,7 @@ linux64-asan/debug:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64-nightly/opt:
     description: "Linux64 Nightly"
@@ -674,6 +695,7 @@ linux64-nightly/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64-noopt/debug:
     description: "Linux64 No-optimize Debug"
@@ -705,6 +727,7 @@ linux64-noopt/debug:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64-rusttests/opt:
     description: "Linux64 Rust tests Opt"
@@ -738,6 +761,7 @@ linux64-rusttests/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64-rusttests/debug:
     description: "Linux64 Rust tests Debug"
@@ -771,6 +795,7 @@ linux64-rusttests/debug:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64-tup/opt:
     description: "Linux64 Tup"
@@ -803,6 +828,7 @@ linux64-tup/opt:
         - linux64-rust
         - linux64-sccache
         - linux64-tup
+        - linux64-node
 
 linux64-jsdcov/opt:
     description: "Linux64-JSDCov Opt"
@@ -832,6 +858,7 @@ linux64-jsdcov/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node
 
 linux64-ccov/debug:
     description: "Linux64-CCov Debug"
@@ -861,6 +888,7 @@ linux64-ccov/debug:
         - linux64-clang-4
         - linux64-rust
         - linux64-gcc
+        - linux64-node
 
 linux64-ccov/opt:
     description: "Linux64-CCov Opt"
@@ -890,6 +918,7 @@ linux64-ccov/opt:
         - linux64-clang-4
         - linux64-rust
         - linux64-gcc
+        - linux64-node
 
 linux64-add-on-devel/opt:
     description: "Linux64 add-on-devel"
@@ -920,3 +949,4 @@ linux64-add-on-devel/opt:
         - linux64-gcc
         - linux64-rust
         - linux64-sccache
+        - linux64-node

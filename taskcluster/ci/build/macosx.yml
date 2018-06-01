@@ -30,6 +30,7 @@ macosx64/debug:
         - linux64-llvm-dsymutil
         - linux64-rust-macos
         - linux64-sccache
+        - linux64-node
 
 macosx64/opt:
     description: "MacOS X x64 Cross-compile"
@@ -62,6 +63,7 @@ macosx64/opt:
         - linux64-llvm-dsymutil
         - linux64-rust-macos
         - linux64-sccache
+        - linux64-node
 
 macosx64-asan-fuzzing/opt:
     description: "MacOS X x64 Cross-compile Fuzzing ASAN"
@@ -95,6 +97,7 @@ macosx64-asan-fuzzing/opt:
         - linux64-llvm-dsymutil
         - linux64-rust-macos
         - linux64-sccache
+        - linux64-node
 
 macosx64-dmd/opt:
     description: "MacOS X x64 DMD Cross-compile"
@@ -130,6 +133,7 @@ macosx64-dmd/opt:
         - linux64-llvm-dsymutil
         - linux64-rust-macos
         - linux64-sccache
+        - linux64-node
 
 macosx64-devedition-nightly/opt:
     description: "MacOS X Dev Edition x64 Nightly"
@@ -170,6 +174,7 @@ macosx64-devedition-nightly/opt:
         - linux64-llvm-dsymutil
         - linux64-rust-macos
         - linux64-sccache
+        - linux64-node
 
 macosx64-noopt/debug:
     description: "MacOS X x64 No-optimize Debug"
@@ -205,6 +210,7 @@ macosx64-noopt/debug:
         - linux64-llvm-dsymutil
         - linux64-rust-macos
         - linux64-sccache
+        - linux64-node
 
 macosx64-add-on-devel/opt:
     description: "MacOS X x64 add-on-devel"
@@ -239,6 +245,7 @@ macosx64-add-on-devel/opt:
         - linux64-llvm-dsymutil
         - linux64-rust-macos
         - linux64-sccache
+        - linux64-node
 
 macosx64-nightly/opt:
     description: "MacOS X x64 Cross-compile Nightly"
@@ -277,3 +284,4 @@ macosx64-nightly/opt:
         - linux64-llvm-dsymutil
         - linux64-rust-macos
         - linux64-sccache
+        - linux64-node

@@ -45,3 +45,4 @@ jobs:
             - linux64-clang-tidy
             - linux64-rust
             - linux64-sccache
+            - linux64-node
