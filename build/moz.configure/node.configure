@@ -4,13 +4,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-option('--enable-nodejs',
+option('--disable-nodejs',
        help='Require Node.js to build')
 
 
 # "nodejs" is first in the tuple on the assumption that it's only likely to
-# exist on systems (probably linux distros) where there is a program in the path
-# called "node" that does something else.
+# exist on systems (probably linux distros) where there is a program in the
+# path called "node" that does something else.
 nodejs = check_prog('NODEJS', ('nodejs', 'node',),
                     allow_missing=True)
 
