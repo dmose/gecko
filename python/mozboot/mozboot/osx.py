@@ -337,7 +337,6 @@ class OSXBootstrapper(BaseBootstrapper):
             'gnu-tar',
             'llvm',
             'mercurial',
-            'node',
             'python',
             'python3',
             'terminal-notifier',
@@ -404,8 +403,7 @@ class OSXBootstrapper(BaseBootstrapper):
             'mercurial',
             'autoconf213',
             'gnutar',
-            'watchman',
-            'nodejs8'
+            'watchman'
         ]
 
         self._ensure_macports_packages(packages)
