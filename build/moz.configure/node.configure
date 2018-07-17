@@ -8,6 +8,25 @@ option('--disable-nodejs',
        help='Require Node.js to build')
 
 
+@imports('os')
+@imports(_from='os', _import='environ')
+def toolchain_search_path():
+    # XXX partly copied from tooltool.py; should be hoisted somewhere central
+
+    # Also add in the location to which `mach bootstrap` or
+    # `mach artifact toolchain` installs clang.
+    mozbuild_state_dir = environ.get('MOZBUILD_STATE_PATH', os.path.expanduser(
+                                     os.path.join('~', '.mozbuild')))
+
+    mozbuild_node_path = os.path.join(mozbuild_state_dir, 'node', 'bin')
+
+    # We still fallback to the PATH, since on Windows, Node will be coming from
+    # MozillaBuild, not from the toolchain
+    path = [environ.get('PATH')]
+    updated_path = [mozbuild_node_path] + path
+
+    return updated_path
+
 # "nodejs" is first in the tuple on the assumption that it's only likely to
 # exist on systems (probably linux distros) where there is a program in the
 # path called "node" that does something else.
