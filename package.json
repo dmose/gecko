@@ -11,5 +11,7 @@
     "eslint-plugin-react": "7.10.0",
     "eslint-plugin-spidermonkey-js": "file:tools/lint/eslint/eslint-plugin-spidermonkey-js"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "webpack": "4.15.0"
+  }
 }
