@@ -19,10 +19,6 @@ browser.jar:
   res/activity-stream/vendor/react-redux.js (./vendor/react-redux.js)
   res/activity-stream/data/content/assets/ (./data/content/assets/*)
   res/activity-stream/data/content/tippytop/ (./data/content/tippytop/*)
-  res/activity-stream/data/content/activity-stream.bundle.js (./data/content/activity-stream.bundle.js)
-#ifndef RELEASE_OR_BETA
-  res/activity-stream/data/content/activity-stream.bundle.js.map (./data/content/activity-stream.bundle.js.map)
-#endif
 #ifdef XP_MACOSX
   res/activity-stream/css/activity-stream.css (./css/activity-stream-mac.css)
 #ifndef RELEASE_OR_BETA
