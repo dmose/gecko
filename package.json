@@ -10,7 +10,8 @@
     "eslint-plugin-mozilla": "file:tools/lint/eslint/eslint-plugin-mozilla",
     "eslint-plugin-no-unsanitized": "3.0.2",
     "eslint-plugin-react": "7.10.0",
-    "eslint-plugin-spidermonkey-js": "file:tools/lint/eslint/eslint-plugin-spidermonkey-js"
+    "eslint-plugin-spidermonkey-js": "file:tools/lint/eslint/eslint-plugin-spidermonkey-js",
+    "fluent": "0.6.4"
   },
   "devDependencies": {
     "babel-core": "6.26.3",
