@@ -25,3 +25,27 @@ EXTRA_COMPONENTS += [
 ]
 
 JAR_MANIFESTS += ['jar.mn']
+
+t = ('activity_stream_bundle', 'activity-stream.bundle.js',
+     'activity-stream.bundle.js.map')
+GENERATED_FILES += [t]
+
+# This is our dependency list that tells us when to rebuild.  We should be able
+# to generate the source dependency list (perhaps by just generating it as a
+# file) and then including it here.
+inputs = ['webpack.system-addon.config.js',
+          'content-src/components/Search/Search.jsx',
+          'content-src/components/Base/Base.jsx']
+
+bundle = GENERATED_FILES[t]
+bundle.script = '/python/mozbuild/mozbuild/action/node.py'
+bundle.inputs = inputs
+
+bundle.flags = ['--', '%s/node_modules/webpack/bin/webpack.js' % TOPSRCDIR, '--config', 'webpack.system-addon.config.js', '--output-path', OBJDIR]
+
+# These go here instead of in the jar.mn, since they're coming from the OBJDIR
+FINAL_TARGET_FILES.chrome.browser.res["activity-stream"].data.content += ['!activity-stream.bundle.js',]
+if not CONFIG['RELEASE_OR_BETA']:
+    FINAL_TARGET_FILES.chrome.browser.res["activity-stream"].data.content += [
+        '!activity-stream.bundle.js.map',
+]
