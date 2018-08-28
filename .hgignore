@@ -131,7 +131,8 @@ GPATH
 .tox/
 
 # Ignore ESLint node_modules
-^node_modules/
+^node_modules/eslint-plugin-mozilla
+^node_modules/eslint-plugin-spidermonkey-js
 ^tools/lint/eslint/eslint-plugin-mozilla/node_modules/
 
 # Ignore talos virtualenv and tp5n files.
