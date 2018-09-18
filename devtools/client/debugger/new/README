@@ -1,0 +1,31 @@
+Building debugger from sources:
+1) Checkout GitHub sources:
+   $ ./copy-from-github.sh
+This script creates a "github" folder.
+This checkouts a custom branch with a few tweaks (moz.build generator script).
+"github" is a complete checkout of github repo, that is not meant to land in m-c,
+It is the real debugger sources using JSX and es6modules.
+
+3) Create the moz.build files in "src" folder:
+   $ cd github
+   $ yarn
+   $ node bin/create-mozbuild.js src/
+Once `mach` integration is validated, we can land these moz.build files in GitHub
+and maintain them manually, as we do in mozilla-central.
+It spawns moz.build using `NodeModules()` instead of `DevToolsModules()`.
+So instead of just putting files as-is to objdir, they are processed by node/babel.
+
+4) Update vendors bundle:
+   $ cd github
+   $ node bin/copy-assets.js --mc ../../../../../
+Ideally, this step would also go away and use only babel.
+For now, it can be considered as an external vendor, updated like we used to update debugger bundle.
+
+5) Sync git sources with hg ones:
+   $ rm -rf src/
+   $ mkdir src/
+   $ cp -r github/src/* src/
+Copy the sources from git to mercurial.
+Once we have node in mach, we can land these src as-is.
+
+5) $ ./mach build!
