@@ -11,7 +11,7 @@ DIRS += [
     'utils',
 ]
 
-DevToolsModules(
+NodeModules(
     'ast.js',
     'coverage.js',
     'debuggee.js',

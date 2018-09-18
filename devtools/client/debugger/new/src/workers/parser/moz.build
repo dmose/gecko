@@ -5,8 +5,21 @@
 
 DIRS += [
     'getScopes',
+    'utils',
 ]
 
-DevToolsModules(
+NodeModules(
+    'findOutOfScopeLocations.js',
+    'frameworks.js',
+    'getSymbols.js',
     'index.js',
+    'mapAwaitExpression.js',
+    'mapBindings.js',
+    'mapExpression.js',
+    'mapOriginalExpression.js',
+    'pausePoints.js',
+    'sources.js',
+    'steps.js',
+    'validate.js',
+    'worker.js',
 )

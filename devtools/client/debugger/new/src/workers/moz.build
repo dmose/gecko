@@ -9,6 +9,4 @@ DIRS += [
     'search',
 ]
 
-DevToolsModules(
 
-)

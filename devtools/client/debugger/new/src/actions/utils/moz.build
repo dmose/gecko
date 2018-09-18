@@ -7,6 +7,6 @@ DIRS += [
     'middleware',
 ]
 
-DevToolsModules(
+NodeModules(
     'create-store.js',
 )
