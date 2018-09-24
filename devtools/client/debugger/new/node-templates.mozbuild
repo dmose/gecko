@@ -30,6 +30,6 @@ def NodeModules(*modules):
     GENERATED_FILES += [outputs]
 
     bundle = GENERATED_FILES[outputs]
-    bundle.script = '/devtools/client/debugger/new/node.py:generate'
+    bundle.script = '/python/mozbuild/mozbuild/action/node.py:generate'
     bundle.inputs = ['/devtools/client/debugger/new/build/copy-module.js']
     bundle.inputs.extend(modules)
