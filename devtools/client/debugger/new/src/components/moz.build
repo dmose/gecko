@@ -10,7 +10,7 @@ DIRS += [
     'shared',
 ]
 
-DevToolsModules(
+NodeModules(
     'A11yIntention.js',
     'App.js',
     'ProjectSearch.js',
