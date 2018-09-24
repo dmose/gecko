@@ -5,28 +5,26 @@
 from __future__ import absolute_import, unicode_literals, print_function
 
 import buildconfig
-import os
 import pipes
 import subprocess
 import sys
 
-
-SCRIPT_WHITELIST = [
+SCRIPT_ALLOWLIST = [
         buildconfig.topsrcdir + "/devtools/client/debugger/new/build/copy-module.js"
     ]
 
-WHITELIST_WARNING = '''
+ALLOWLIST_WARNING = '''
 %s is not
-in SCRIPT_WHITELIST in python/mozbuild/mozbuild/action/node.py.
+in SCRIPT_ALLOWLIST in python/mozbuild/mozbuild/action/node.py.
 Using NodeJS from moz.build is currently in beta, and node
-scripts to be executed need to be added to the whitelist and
+scripts to be executed need to be added to the allowlist and
 reviewed by a build peer so that we can get a better sense of
 how support should evolve.
 '''
 
 
-def is_script_in_whitelist(script_path):
-    if script_path in SCRIPT_WHITELIST:
+def is_script_in_allowlist(script_path):
+    if script_path in SCRIPT_ALLOWLIST:
         return True
 
     return False
@@ -54,10 +52,7 @@ def execute_node_cmd(node_cmd_list):
         print('Executing "{}"'.format(printable_cmd), file=sys.stderr)
         sys.stderr.flush()
 
-        # XXX do we actually want to pass through the whole environment?
-        env = dict(os.environ)
-
-        output = subprocess.check_output(node_cmd_list, env=env)
+        output = subprocess.check_output(node_cmd_list)
 
         # Process the node script output
         deps = []
@@ -78,7 +73,7 @@ def execute_node_cmd(node_cmd_list):
         print("""Failed with %s.  Be sure to check that your mozconfig doesn't
             have --disable-nodejs in it.  If it does, try removing that line and
             building again.""" % str(err), file=sys.stderr)
-        raise err
+        sys.exit(1)
 
 
 def generate(output, node_script, *files):
@@ -86,7 +81,7 @@ def generate(output, node_script, *files):
 
     Arguments:
     output -- a dummy file, used by the build system.  Can be ignored.
-    node_script -- the script to be executed.  Must be in the SCRIPT_WHITELIST
+    node_script -- the script to be executed.  Must be in the SCRIPT_ALLOWLIST
     files -- files to be transformed, will be passed to the script as arguments
 
     Returns:
@@ -95,13 +90,20 @@ def generate(output, node_script, *files):
     to ensure that incremental rebuilds happen when any dependency changes.
     """
 
-    node_interpreter = buildconfig.substs['NODEJS']
+    node_interpreter = buildconfig.substs.get('NODEJS')
+    if not node_interpreter:
+        print("""NODEJS not set.  Be sure to check that your mozconfig doesn't
+            have --disable-nodejs in it.  If it does, try removing that line
+            and building again.""", file=sys.stderr)
+        sys.exit(1)
 
+    print("NODEJS = {}", node_interpreter, file=sys.stderr)
+    
     if type(node_script) is not str:
         raise ValueError("moz.build file didn't specify a node script")
 
-    if not is_script_in_whitelist(node_script):
-        raise ValueError(WHITELIST_WARNING % (node_script))
+    if not is_script_in_allowlist(node_script):
+        raise ValueError(ALLOWLIST_WARNING % (node_script))
 
     node_cmd_list = [node_interpreter, node_script]
     node_cmd_list.extend(files)
