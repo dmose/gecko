@@ -7,7 +7,7 @@ DIRS += [
     'firefox',
 ]
 
-DevToolsModules(
+NodeModules(
     'firefox.js',
     'index.js',
 )
