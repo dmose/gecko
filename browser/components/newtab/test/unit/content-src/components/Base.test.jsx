@@ -17,7 +17,8 @@ describe("<Base>", () => {
 
   it("should render Base component", () => {
     const wrapper = shallow(<Base {...DEFAULT_PROPS} />);
-    assert.ok(wrapper.exists());
+    // XXX make sure assert.false (no such method) fails right too
+    assert.isFalse(wrapper.exists());
   });
 
   it("should render the BaseContent component, passing through all props", () => {
