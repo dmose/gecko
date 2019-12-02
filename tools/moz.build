@@ -66,6 +66,11 @@ SPHINX_TREES['fuzzing'] = 'fuzzing/docs'
 with Files('tryselect/docs/**'):
     SCHEDULES.exclusive = ['docs']
 
+SPHINX_TREES['nodejs-docs'] = '../tools/nodejs-docs'
+
+# with Files('../toolsnodejs-docs/**'):
+#     SCHEDULES.exclusive = ['.']
+
 CRAMTEST_MANIFESTS += [
     'tryselect/test/cram.ini',
 ]
