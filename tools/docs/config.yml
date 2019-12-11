@@ -15,6 +15,7 @@ categories:
         - modules/libpref
         - remote
         - services/common/services
+        - tools/nodejs-docs
         - uriloader
     build_doc:
         - mach
