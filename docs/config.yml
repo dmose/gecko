@@ -34,6 +34,7 @@ categories:
         - mach
         - tools/try
         - build/buildsystem
+        - tools/nodejs-docs
         - taskcluster
         - tools/moztreedocs
     testing_doc:

@@ -68,8 +68,13 @@ SPHINX_TREES["code-coverage"] = "code-coverage/docs"
 
 SPHINX_TREES["profiler"] = "profiler/docs"
 
+SPHINX_TREES['nodejs-docs'] = 'nodejs-docs'
+
 with Files("tryselect/docs/**"):
     SCHEDULES.exclusive = ["docs"]
+
+with Files('tryselect/docs/**'):
+    SCHEDULES.exclusive = ['docs']
 
 CRAMTEST_MANIFESTS += [
     "tryselect/test/cram.ini",
