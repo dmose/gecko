@@ -70,11 +70,13 @@ processtools = { path = "../../../components/processtools" }
 qcms = { path = "../../../../gfx/qcms" }
 
 [target.'cfg(not(target_os = "android"))'.dependencies]
-viaduct = { git = "https://github.com/mozilla/application-services", rev = "9ba519a5739b1976f1d333923d34b7f4916b9e26"}
+viaduct = { git = "https://github.com/mozilla/application-services", rev = "2478bcf2b48d1867b01e8b7df4f86a69d564d49a"}
 webext_storage_bridge = { path = "../../../components/extensions/storage/webext_storage_bridge" }
+nimbus-sdk = { git = "https://github.com/mozilla/nimbus-sdk", rev = "f645b9bbf75328d1e38a343348a083b268a53a3c" }
 
 [build-dependencies]
 rustc_version = "0.2"
+uniffi_build = { features = ["builtin-bindgen"] }
 
 [features]
 default = []
