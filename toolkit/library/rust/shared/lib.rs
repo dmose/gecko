@@ -6,6 +6,7 @@
 
 extern crate geckoservo;
 
+#[cfg(feature = "rust_nimbus_sdk")]
 extern crate nimbus;
 
 extern crate app_services_logger;

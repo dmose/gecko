@@ -1,0 +1,12 @@
+EXPORTS.mozilla.dom += [
+    'NimbusClient.h',
+    'NimbusShared.h',
+]
+UNIFIED_SOURCES += [
+    'NimbusClient.cpp',
+]
+WEBIDL_FILES += [
+    'Nimbus.webidl',
+]
+
+FINAL_LIBRARY = 'xul'
