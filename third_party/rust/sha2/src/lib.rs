@@ -20,19 +20,17 @@
 //! # Usage
 //!
 //! ```rust
-//! # #[macro_use] extern crate hex_literal;
-//! # extern crate sha2;
-//! # fn main() {
+//! use hex_literal::hex;
 //! use sha2::{Sha256, Sha512, Digest};
 //!
 //! // create a Sha256 object
 //! let mut hasher = Sha256::new();
 //!
 //! // write input message
-//! hasher.input(b"hello world");
+//! hasher.update(b"hello world");
 //!
 //! // read hash digest and consume hasher
-//! let result = hasher.result();
+//! let result = hasher.finalize();
 //!
 //! assert_eq!(result[..], hex!("
 //!     b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9
@@ -40,40 +38,38 @@
 //!
 //! // same for Sha512
 //! let mut hasher = Sha512::new();
-//! hasher.input(b"hello world");
-//! let result = hasher.result();
+//! hasher.update(b"hello world");
+//! let result = hasher.finalize();
 //!
 //! assert_eq!(result[..], hex!("
 //!     309ecc489c12d6eb4cc40f50c902f2b4d0ed77ee511a7c7a9bcd3ca86d4cd86f
 //!     989dd35bc5ff499670da34255b45b0cfd830e81f605dcf7dc5542e93ae9cd76f
 //! ")[..]);
-//! # }
 //! ```
 //!
 //! Also see [RustCrypto/hashes][2] readme.
 //!
 //! [1]: https://en.wikipedia.org/wiki/SHA-2
 //! [2]: https://github.com/RustCrypto/hashes
+
 #![no_std]
-#![doc(html_logo_url =
-    "https://raw.githubusercontent.com/RustCrypto/meta/master/logo_small.png")]
-extern crate block_buffer;
-extern crate fake_simd as simd;
-#[macro_use] extern crate opaque_debug;
-#[macro_use] pub extern crate digest;
-#[cfg(feature = "asm")]
-extern crate sha2_asm;
+#![doc(
+    html_logo_url = "https://raw.githubusercontent.com/RustCrypto/meta/master/logo.svg",
+    html_favicon_url = "https://raw.githubusercontent.com/RustCrypto/meta/master/logo.svg"
+)]
+#![warn(missing_docs, rust_2018_idioms)]
+
 #[cfg(feature = "std")]
 extern crate std;
 
 mod consts;
-#[cfg(not(feature = "asm"))]
-mod sha256_utils;
-#[cfg(not(feature = "asm"))]
-mod sha512_utils;
 mod sha256;
 mod sha512;
 
-pub use digest::Digest;
-pub use sha256::{Sha256, Sha224};
-pub use sha512::{Sha512, Sha384, Sha512Trunc224, Sha512Trunc256};
+pub use digest::{self, Digest};
+#[cfg(feature = "compress")]
+pub use sha256::compress256;
+pub use sha256::{Sha224, Sha256};
+#[cfg(feature = "compress")]
+pub use sha512::compress512;
+pub use sha512::{Sha384, Sha512, Sha512Trunc224, Sha512Trunc256};

@@ -1,0 +1,97 @@
+namespace nimbus {};
+dictionary AppContext {
+    string? app_id;
+    string? app_version;
+    string? app_build;
+    string? architecture;
+    string? device_manufacturer;
+    string? device_model;
+    string? locale;
+    string? os;
+    string? os_version;
+    string? android_sdk_version;
+    string? debug_tag;
+};
+
+dictionary EnrolledExperiment {
+    string slug;
+    string user_facing_name;
+    string user_facing_description;
+    string branch_slug;
+};
+
+dictionary RemoteSettingsConfig {
+    string server_url;
+    string bucket_name;
+    string collection_name;
+};
+
+dictionary AvailableRandomizationUnits {
+    string? client_id;
+    // work around uniffi-rs #331 by including a non-optional value. We'll
+    // try and hide this in the bindings used by clients and eventually remove
+    // it entirely.
+    i8 dummy;
+};
+
+[Error]
+enum Error {
+   "InvalidPersistedData", "RkvError", "IOError",
+   "JSONError", "EvaluationError", "InvalidExpression", "InvalidFraction",
+    "TryFromSliceError", "EmptyRatiosError", "OutOfBoundsError","UrlParsingError",
+    "RequestError", "ResponseError", "UuidError", "InvalidExperimentResponse",
+    "InvalidPath"
+};
+
+interface NimbusClient {
+    [Throws=Error]
+    constructor(
+        AppContext app_ctx,
+        string dbpath,
+        RemoteSettingsConfig remote_settings_config,
+        AvailableRandomizationUnits available_randomization_units
+    );
+
+
+    // Returns the branch allocated for a given experiment ID. Returns null
+    // if the user is not enrolled in the specified experiment or if the
+    // specified experiment does not exist.
+    [Throws=Error]
+    string? get_experiment_branch(string experiment_slug);
+
+    // Returns a list of experiments this user is enrolled in.
+    [Throws=Error]
+    sequence<EnrolledExperiment> get_active_experiments();
+
+    // Getter and setter for user's participation in all experiments.
+    // Possible values are:
+    // * `true`: the user will not enroll in new experiments, and opt out of all exisitng ones.
+    // * `false`: experiments proceed as usual.
+    [Throws=Error]
+    boolean get_global_user_participation();
+
+    [Throws=Error]
+    void set_global_user_participation(boolean opt_in);
+
+    // Updates the list of experiments from the server. After calling this, the
+    // list of active experiments might change (there might be new experiments,
+    // or old experiments might have expired)
+    [Throws=Error]
+    void update_experiments();
+
+    // These are test-only functions and should never be exposed to production
+    // users, as they mess with the "statistical requirements" of the SDK.
+
+    // Opt in to a specific branch on a specific experiment. Useful for
+    // developers to test their app's interaction with the experiment.
+    [Throws=Error]
+    void opt_in_with_branch(string experiment_slug, string branch);
+
+    // Opt out of a specific experiment.
+    [Throws=Error]
+    void opt_out(string experiment_slug);
+
+    [Throws=Error]
+    void reset_enrollment(string experiment_slug);
+
+};
