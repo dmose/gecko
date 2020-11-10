@@ -111,6 +111,7 @@ glean_with_gecko = ["fog_control/with_gecko"]
 rust_fxa_client = ["firefox-accounts-bridge"]
 with_dbus = ["audio_thread_priority/with_dbus"]
 thread_sanitizer = ["xpcom/thread_sanitizer"]
+rust_nimbus_sdk = ["nimbus-sdk"]
 
 [lib]
 path = "lib.rs"
