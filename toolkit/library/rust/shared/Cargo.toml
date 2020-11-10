@@ -70,6 +70,8 @@ l10nregistry-ffi = { path = "../../../../intl/l10n/rust/l10nregistry-ffi" }
 processtools = { path = "../../../components/processtools" }
 qcms = { path = "../../../../gfx/qcms" }
 
+nimbus-sdk = { git = "https://github.com/mozilla/nimbus-sdk", rev = "cd11973bd971bb2fa08c3048a5f2de361a3b478e", optional = true }
+
 [target.'cfg(not(target_os = "android"))'.dependencies]
 viaduct = { git = "https://github.com/mozilla/application-services", rev = "8a576fbe79199fa8664f64285524017f74ebcc5f"}
 webext_storage_bridge = { path = "../../../components/extensions/storage/webext_storage_bridge" }
