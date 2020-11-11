@@ -3,6 +3,7 @@
 
 #include "mozilla/dom/NimbusClient.h"
 #include "mozilla/dom/NimbusShared.h"
+#include "mozilla/dom/Promise.h"
 
 namespace mozilla {
 namespace dom {
@@ -117,6 +118,36 @@ void NimbusClient::SetGlobalUserParticipation(bool opt_in, ErrorResult& aRv) {
     aRv.ThrowOperationError(nsDependentCString(err.mMessage));
     return;
   }
+}
+
+already_AddRefed<Promise> NimbusClient::GetActiveExperimentsAsync(
+  ErrorResult& aRv
+) {
+  RefPtr<Promise> promise = Promise::Create(GetParentObject(), aRv);
+  if (aRv.Failed()) {
+    return nullptr;
+  }
+
+  auto promiseHolder = MakeRefPtr<nsMainThreadPtrHolder<dom::Promise>>(
+      "NimbusClient::GetActiveExperimentsAsync", promise.get());
+  RefPtr<NimbusClient> self = this;
+
+  nsCOMPtr<nsIRunnable> runnable = NS_NewRunnableFunction(
+      "NimbusClient::GetActiveExperimentsAsync",
+      [self{std::move(self)}, holder = std::move(promiseHolder)]() {
+        ErrorResult err;
+        nsTArray<EnrolledExperiment> result;
+        self->GetActiveExperiments(result, err);
+        DebugOnly<nsresult> rv = NS_DispatchToMainThread(
+            NS_NewRunnableFunction("NimbusClient::GetACtiveExperimentsAsyncDone",
+              [promise = std::move(holder), result = std::move(result)]() {
+                promise->get()->MaybeResolve(result);
+              }));
+      });
+
+  NS_DispatchBackgroundTask(runnable, NS_DISPATCH_EVENT_MAY_BLOCK);
+
+  return promise.forget();
 }
 
 void NimbusClient::UpdateExperiments(ErrorResult& aRv) {

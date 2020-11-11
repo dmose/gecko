@@ -44,6 +44,8 @@ class NimbusClient final : public nsISupports, public nsWrapperCache {
 
   void SetGlobalUserParticipation(bool opt_in, ErrorResult& aRv);
 
+  already_AddRefed<Promise> GetActiveExperimentsAsync(ErrorResult& aRv);
+
   void UpdateExperiments(ErrorResult& aRv);
 
   void OptInWithBranch(const nsAString& experiment_slug,

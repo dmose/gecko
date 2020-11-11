@@ -53,6 +53,10 @@ interface NimbusClient {
   [Throws]
   sequence<EnrolledExperiment> getActiveExperiments(
   );
+
+  [Throws]
+  Promise<sequence<EnrolledExperiment>> getActiveExperimentsAsync(
+  );
   
   [Throws]
   boolean getGlobalUserParticipation(
