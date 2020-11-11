@@ -139,8 +139,15 @@ already_AddRefed<Promise> NimbusClient::GetActiveExperimentsAsync(
         nsTArray<EnrolledExperiment> result;
         self->GetActiveExperiments(result, err);
         DebugOnly<nsresult> rv = NS_DispatchToMainThread(
-            NS_NewRunnableFunction("NimbusClient::GetACtiveExperimentsAsyncDone",
-              [promise = std::move(holder), result = std::move(result)]() {
+            NS_NewRunnableFunction("NimbusClient::GetActiveExperimentsAsyncDone",
+              [promise = std::move(holder), result = std::move(result),
+               err = std::move(err)]() {
+                if (err.Failed()) {
+                  // No idea why this doesn't work
+                  // promise->get()->MaybeReject(err);
+                  promise->get()->MaybeRejectWithUndefined();
+                  return;
+                }
                 promise->get()->MaybeResolve(result);
               }));
       });

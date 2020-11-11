@@ -30,7 +30,7 @@ add_task(async function test_nimbus() {
   );
 
   // Get this working next
-  let experiments = client.getActiveExperiments();
+  let experiments = await client.getActiveExperimentsAsync();
   Assert.equal(experiments.length, 1, "there should be one valid experiment");
   Assert.equal(experiments[0].slug, "secure-gold");
 });
