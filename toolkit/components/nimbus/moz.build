@@ -10,3 +10,8 @@ WEBIDL_FILES += [
 ]
 
 FINAL_LIBRARY = 'xul'
+
+XPCSHELL_TESTS_MANIFESTS += ['test/xpcshell/xpcshell.ini']
+
+# with Files('**'):
+#    BUG_COMPONENT = ('Toolkit', 'Nimbus SDK') maybe?
