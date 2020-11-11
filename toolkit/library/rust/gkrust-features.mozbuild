@@ -85,3 +85,6 @@ if CONFIG['MOZ_USING_WASM_SANDBOXING']:
 
 if CONFIG['MOZ_ENABLE_DBUS']:
     gkrust_features += ['with_dbus']
+
+if CONFIG['MOZ_RUST_NIMBUS_SDK']:
+    gkrust_features += ['rust_nimbus_sdk']

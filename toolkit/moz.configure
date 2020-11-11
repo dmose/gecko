@@ -2309,6 +2309,19 @@ set_config("MOZ_RUST_FXA_CLIENT", True, when=rust_fxa_client)
 set_define("MOZ_RUST_FXA_CLIENT", True, when=rust_fxa_client)
 
 
+# Nimbus SDK implemented in Rust
+# ==============================
+
+@depends(milestone, target)
+def rust_nimbus_sdk(milestone, target):
+    if milestone.is_nightly and target.os != 'Android':
+        return True
+
+set_config('MOZ_RUST_NIMBUS_SDK', True, when=rust_nimbus_sdk)
+set_define('MOZ_RUST_NIMBUS_SDK', True, when=rust_nimbus_sdk)
+
+
+
 # dump_syms
 # ==============================================================
 
