@@ -130,14 +130,15 @@ already_AddRefed<Promise> NimbusClient::GetActiveExperimentsAsync(
 
   auto promiseHolder = MakeRefPtr<nsMainThreadPtrHolder<dom::Promise>>(
       "NimbusClient::GetActiveExperimentsAsync", promise.get());
-  RefPtr<NimbusClient> self = this;
+  auto self = MakeRefPtr<nsMainThreadPtrHolder<NimbusClient>>(
+      "NimbusClientObjectHolder", this, false);
 
   nsCOMPtr<nsIRunnable> runnable = NS_NewRunnableFunction(
       "NimbusClient::GetActiveExperimentsAsync",
       [self{std::move(self)}, holder = std::move(promiseHolder)]() {
         ErrorResult err;
         nsTArray<EnrolledExperiment> result;
-        self->GetActiveExperiments(result, err);
+        self->get()->GetActiveExperiments(result, err);
         DebugOnly<nsresult> rv = NS_DispatchToMainThread(
             NS_NewRunnableFunction("NimbusClient::GetActiveExperimentsAsyncDone",
               [promise = std::move(holder), result = std::move(result),
