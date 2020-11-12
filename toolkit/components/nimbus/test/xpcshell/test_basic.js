@@ -15,7 +15,6 @@ add_task(async function test_nimbus() {
 
   // XXX rename file
   // XXX eslint hint
-  // XXX should something assert because we're doing this on the main thread?
   let client = new NimbusClient(
     {
       appId: "123",

@@ -121,8 +121,7 @@ void NimbusClient::SetGlobalUserParticipation(bool opt_in, ErrorResult& aRv) {
 }
 
 already_AddRefed<Promise> NimbusClient::GetActiveExperimentsAsync(
-  ErrorResult& aRv
-) {
+    ErrorResult& aRv) {
   RefPtr<Promise> promise = Promise::Create(GetParentObject(), aRv);
   if (aRv.Failed()) {
     return nullptr;
@@ -136,21 +135,20 @@ already_AddRefed<Promise> NimbusClient::GetActiveExperimentsAsync(
   nsCOMPtr<nsIRunnable> runnable = NS_NewRunnableFunction(
       "NimbusClient::GetActiveExperimentsAsync",
       [self{std::move(self)}, holder = std::move(promiseHolder)]() {
-        ErrorResult err;
         nsTArray<EnrolledExperiment> result;
+        ErrorResult err;
         self->get()->GetActiveExperiments(result, err);
-        DebugOnly<nsresult> rv = NS_DispatchToMainThread(
-            NS_NewRunnableFunction("NimbusClient::GetActiveExperimentsAsyncDone",
-              [promise = std::move(holder), result = std::move(result),
-               err = std::move(err)]() {
-                if (err.Failed()) {
-                  // No idea why this doesn't work
-                  // promise->get()->MaybeReject(err);
-                  promise->get()->MaybeRejectWithUndefined();
-                  return;
-                }
-                promise->get()->MaybeResolve(result);
-              }));
+        DebugOnly<nsresult> rv = NS_DispatchToMainThread(NS_NewRunnableFunction(
+            "NimbusClient::GetActiveExperimentsAsyncDone",
+            [promise = std::move(holder), result = std::move(result),
+             err = CopyableErrorResult(std::move(err))]() mutable {
+              if (err.Failed()) {
+                ErrorResult err2(std::move(err));
+                promise->get()->MaybeReject(std::move(err2));
+                return;
+              }
+              promise->get()->MaybeResolve(result);
+            }));
       });
 
   NS_DispatchBackgroundTask(runnable, NS_DISPATCH_EVENT_MAY_BLOCK);
