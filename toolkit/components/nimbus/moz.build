@@ -5,9 +5,6 @@ EXPORTS.mozilla.dom += [
 UNIFIED_SOURCES += [
     'NimbusClient.cpp',
 ]
-WEBIDL_FILES += [
-    'Nimbus.webidl',
-]
 
 FINAL_LIBRARY = 'xul'
 
