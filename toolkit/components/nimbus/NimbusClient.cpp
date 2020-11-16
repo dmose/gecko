@@ -6,6 +6,7 @@
 #include "mozilla/dom/Promise.h"
 #include "mozilla/MozPromise.h"
 #include "nsISerialEventTarget.h"
+#include "MainThreadUtils.h"
 #include "nsAppRunner.h"
 
 namespace mozilla {
@@ -136,44 +137,59 @@ RefPtr<nsISerialEventTarget> NimbusClient::GetBackgroundTarget() {
 
 already_AddRefed<Promise> NimbusClient::GetActiveExperimentsAsync(
     ErrorResult& aRv) {
+
+  if (!XRE_IsParentProcess() && !NS_IsMainThread()) {
+    aRv.Throw(NS_ERROR_UNEXPECTED);
+    return nullptr;
+  }
+
   RefPtr<Promise> promise = Promise::Create(GetParentObject(), aRv);
   if (aRv.Failed()) {
     return nullptr;
   }
 
-  if (!XRE_IsParentProcess()) {
-    return nullptr;
-  }
-
-
   RefPtr<nsISerialEventTarget> backgroundET = GetBackgroundTarget();
   mozilla::InvokeAsync(
-          backgroundET, __func__,
-          [handle = mHandle]() {
-            nimbus_1725_RustError err = {0, nullptr};
-            const nimbus_1725_RustBuffer loweredRetVal_ = {0, 0, nullptr};
-            nimbus_1725_NimbusClient_get_active_experiments(handle, &err);
-            if (err.mCode) {
-              return nimbus_1725_MozPromise::CreateAndReject(std::move(err), __func__);
-            }
-            return nimbus_1725_MozPromise::CreateAndResolve(loweredRetVal_, __func__);
-          })->Then(
-              GetCurrentSerialEventTarget(), __func__,
-              [promise](nimbus_1725_RustBuffer rustBuf) {},
-              [promise](nimbus_1725_RustError rustErr) {});
+      backgroundET, __func__,
+      [handle = mHandle]() {
 
-  // XXX this stuff needs to be uncommented and incorporated into the above
-  // as well...
-  //
-  // if (err.mCode) {
-  //   aRv.ThrowOperationError(nsDependentCString(err.mMessage));
-  //   return;
-  // }
-  // DebugOnly<bool> ok_ =
-  //     nimbus_detail::ViaFfi<nsTArray<EnrolledExperiment>,
-  //                           nimbus_1725_RustBuffer,
-  //                           false>::Lift(loweredRetVal_, aRetVal);
-  // MOZ_ASSERT(ok_);
+        if (XRE_IsParentProcess() && NS_IsMainThread()) {
+          MOZ_CRASH("lambda called outside of parent (process?)");
+        }
+
+        nimbus_1725_RustError err = {0, nullptr};
+        const nimbus_1725_RustBuffer loweredRetVal_ =
+
+        nimbus_1725_NimbusClient_get_active_experiments(handle, &err);
+        if (err.mCode) {
+          return nimbus_1725_MozPromise::CreateAndReject(std::move(err),
+                                                         __func__);
+        }
+        return nimbus_1725_MozPromise::CreateAndResolve(std::move(loweredRetVal_),
+                                                         __func__);
+      })->Then(GetCurrentSerialEventTarget(), __func__,
+        [promise](nimbus_1725_RustBuffer rustBuf) {
+            /* resolve DOM promise */
+
+            nsTArray<EnrolledExperiment> experiments;
+
+            DebugOnly<bool> ok_ =
+                nimbus_detail::ViaFfi<nsTArray<EnrolledExperiment>,
+                                      nimbus_1725_RustBuffer,
+                                      false>::Lift(rustBuf, experiments);
+            promise->MaybeResolve(experiments);
+            MOZ_ASSERT(ok_);
+          },
+          [promise](nimbus_1725_RustError rustErr) {
+            // reject DOM promise...
+
+            // XXX put the message into the error
+            // (a la aRv.ThrowOperationError(nsDependentCString(err.mMessage))
+            promise->MaybeReject(NS_ERROR_FAILURE);
+            // });
+          });
+
+  return promise.forget(); // XXX i assume .forget is needed, check on this
 }
 
 void NimbusClient::UpdateExperiments(ErrorResult& aRv) {
