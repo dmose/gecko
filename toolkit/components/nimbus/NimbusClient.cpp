@@ -4,6 +4,9 @@
 #include "mozilla/dom/NimbusClient.h"
 #include "mozilla/dom/NimbusShared.h"
 #include "mozilla/dom/Promise.h"
+#include "mozilla/MozPromise.h"
+#include "nsISerialEventTarget.h"
+#include "nsAppRunner.h"
 
 namespace mozilla {
 namespace dom {
@@ -120,6 +123,17 @@ void NimbusClient::SetGlobalUserParticipation(bool opt_in, ErrorResult& aRv) {
   }
 }
 
+using nimbus_1725_MozPromise =
+    MozPromise<nimbus_1725_RustBuffer, nimbus_1725_RustError, false>;
+
+RefPtr<nsISerialEventTarget> NimbusClient::GetBackgroundTarget() {
+  if (!mBackgroundET) {
+    MOZ_ALWAYS_SUCCEEDS(NS_CreateBackgroundTaskQueue(
+        "SystemInfoThread", getter_AddRefs(mBackgroundET)));
+  }
+  return mBackgroundET;
+}
+
 already_AddRefed<Promise> NimbusClient::GetActiveExperimentsAsync(
     ErrorResult& aRv) {
   RefPtr<Promise> promise = Promise::Create(GetParentObject(), aRv);
@@ -127,33 +141,39 @@ already_AddRefed<Promise> NimbusClient::GetActiveExperimentsAsync(
     return nullptr;
   }
 
-  auto promiseHolder = MakeRefPtr<nsMainThreadPtrHolder<dom::Promise>>(
-      "NimbusClient::GetActiveExperimentsAsync", promise.get());
-  auto self = MakeRefPtr<nsMainThreadPtrHolder<NimbusClient>>(
-      "NimbusClientObjectHolder", this, false);
+  if (!XRE_IsParentProcess()) {
+    return nullptr;
+  }
 
-  nsCOMPtr<nsIRunnable> runnable = NS_NewRunnableFunction(
-      "NimbusClient::GetActiveExperimentsAsync",
-      [self{std::move(self)}, holder = std::move(promiseHolder)]() {
-        nsTArray<EnrolledExperiment> result;
-        ErrorResult err;
-        self->get()->GetActiveExperiments(result, err);
-        DebugOnly<nsresult> rv = NS_DispatchToMainThread(NS_NewRunnableFunction(
-            "NimbusClient::GetActiveExperimentsAsyncDone",
-            [promise = std::move(holder), result = std::move(result),
-             err = CopyableErrorResult(std::move(err))]() mutable {
-              if (err.Failed()) {
-                ErrorResult err2(std::move(err));
-                promise->get()->MaybeReject(std::move(err2));
-                return;
-              }
-              promise->get()->MaybeResolve(result);
-            }));
-      });
 
-  NS_DispatchBackgroundTask(runnable, NS_DISPATCH_EVENT_MAY_BLOCK);
+  RefPtr<nsISerialEventTarget> backgroundET = GetBackgroundTarget();
+  mozilla::InvokeAsync(
+          backgroundET, __func__,
+          [handle = mHandle]() {
+            nimbus_1725_RustError err = {0, nullptr};
+            const nimbus_1725_RustBuffer loweredRetVal_ = {0, 0, nullptr};
+            nimbus_1725_NimbusClient_get_active_experiments(handle, &err);
+            if (err.mCode) {
+              return nimbus_1725_MozPromise::CreateAndReject(std::move(err), __func__);
+            }
+            return nimbus_1725_MozPromise::CreateAndResolve(loweredRetVal_, __func__);
+          })->Then(
+              GetCurrentSerialEventTarget(), __func__,
+              [promise](nimbus_1725_RustBuffer rustBuf) {},
+              [promise](nimbus_1725_RustError rustErr) {});
 
-  return promise.forget();
+  // XXX this stuff needs to be uncommented and incorporated into the above
+  // as well...
+  //
+  // if (err.mCode) {
+  //   aRv.ThrowOperationError(nsDependentCString(err.mMessage));
+  //   return;
+  // }
+  // DebugOnly<bool> ok_ =
+  //     nimbus_detail::ViaFfi<nsTArray<EnrolledExperiment>,
+  //                           nimbus_1725_RustBuffer,
+  //                           false>::Lift(loweredRetVal_, aRetVal);
+  // MOZ_ASSERT(ok_);
 }
 
 void NimbusClient::UpdateExperiments(ErrorResult& aRv) {

@@ -8,6 +8,7 @@
 #include "nsCOMPtr.h"
 #include "nsIGlobalObject.h"
 #include "nsWrapperCache.h"
+#include "nsISerialEventTarget.h"
 
 #include "mozilla/RefPtr.h"
 
@@ -37,6 +38,7 @@ class NimbusClient final : public nsISupports, public nsWrapperCache {
   void GetExperimentBranch(const nsAString& experiment_slug, nsAString& aRetVal,
                            ErrorResult& aRv);
 
+
   void GetActiveExperiments(nsTArray<EnrolledExperiment>& aRetVal,
                             ErrorResult& aRv);
 
@@ -59,6 +61,8 @@ class NimbusClient final : public nsISupports, public nsWrapperCache {
   ~NimbusClient();
 
   nsCOMPtr<nsIGlobalObject> mGlobal;
+  RefPtr<nsISerialEventTarget> GetBackgroundTarget();
+  RefPtr<nsISerialEventTarget> mBackgroundET;
   uint64_t mHandle;
 };
 
