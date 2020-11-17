@@ -154,13 +154,12 @@ already_AddRefed<Promise> NimbusClient::GetActiveExperimentsAsync(
       [handle = mHandle]() {
 
         if (XRE_IsParentProcess() && NS_IsMainThread()) {
-          MOZ_CRASH("lambda called outside of parent (process?)");
+          MOZ_CRASH("lambda called outside of parent process main thread");
         }
 
         nimbus_1725_RustError err = {0, nullptr};
         const nimbus_1725_RustBuffer loweredRetVal_ =
-
-        nimbus_1725_NimbusClient_get_active_experiments(handle, &err);
+          nimbus_1725_NimbusClient_get_active_experiments(handle, &err);
         if (err.mCode) {
           return nimbus_1725_MozPromise::CreateAndReject(std::move(err),
                                                          __func__);
