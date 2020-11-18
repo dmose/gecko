@@ -44,58 +44,128 @@ struct nimbus_1725_RustError {
   char* mMessage;
 };
 
-void ffi_nimbus_1725_NimbusClient_object_free(
-    uint64_t handle, nimbus_1725_RustError* uniffi_out_err);
 
-uint64_t nimbus_1725_NimbusClient_new(
-    nimbus_1725_RustBuffer app_ctx, nimbus_1725_RustBuffer dbpath,
+
+void
+ffi_nimbus_1725_NimbusClient_object_free(
+    uint64_t handle,
+    nimbus_1725_RustError* uniffi_out_err
+);
+
+
+uint64_t
+nimbus_1725_NimbusClient_new(
+    nimbus_1725_RustBuffer app_ctx,
+    nimbus_1725_RustBuffer dbpath,
     nimbus_1725_RustBuffer remote_settings_config,
     nimbus_1725_RustBuffer available_randomization_units,
-    nimbus_1725_RustError* uniffi_out_err);
+    nimbus_1725_RustError* uniffi_out_err
+);
 
-nimbus_1725_RustBuffer nimbus_1725_NimbusClient_get_experiment_branch(
-    uint64_t handle, nimbus_1725_RustBuffer experiment_slug,
-    nimbus_1725_RustError* uniffi_out_err);
 
-nimbus_1725_RustBuffer nimbus_1725_NimbusClient_get_active_experiments(
-    uint64_t handle, nimbus_1725_RustError* uniffi_out_err);
+nimbus_1725_RustBuffer
+nimbus_1725_NimbusClient_get_experiment_branch(
+    uint64_t handle,
+    nimbus_1725_RustBuffer experiment_slug,
+    nimbus_1725_RustError* uniffi_out_err
+);
 
-int8_t nimbus_1725_NimbusClient_get_global_user_participation(
-    uint64_t handle, nimbus_1725_RustError* uniffi_out_err);
 
-void nimbus_1725_NimbusClient_set_global_user_participation(
-    uint64_t handle, int8_t opt_in, nimbus_1725_RustError* uniffi_out_err);
+nimbus_1725_RustBuffer
+nimbus_1725_NimbusClient_get_active_experiments(
+    uint64_t handle,
+    nimbus_1725_RustError* uniffi_out_err
+);
 
-void nimbus_1725_NimbusClient_update_experiments(
-    uint64_t handle, nimbus_1725_RustError* uniffi_out_err);
 
-void nimbus_1725_NimbusClient_opt_in_with_branch(
-    uint64_t handle, nimbus_1725_RustBuffer experiment_slug,
-    nimbus_1725_RustBuffer branch, nimbus_1725_RustError* uniffi_out_err);
+int8_t
+nimbus_1725_NimbusClient_get_global_user_participation(
+    uint64_t handle,
+    nimbus_1725_RustError* uniffi_out_err
+);
 
-void nimbus_1725_NimbusClient_opt_out(uint64_t handle,
-                                      nimbus_1725_RustBuffer experiment_slug,
-                                      nimbus_1725_RustError* uniffi_out_err);
 
-void nimbus_1725_NimbusClient_reset_enrollment(
-    uint64_t handle, nimbus_1725_RustBuffer experiment_slug,
-    nimbus_1725_RustError* uniffi_out_err);
 
-nimbus_1725_RustBuffer ffi_nimbus_1725_rustbuffer_alloc(
-    int32_t size, nimbus_1725_RustError* uniffi_out_err);
+void
+nimbus_1725_NimbusClient_set_global_user_participation(
+    uint64_t handle,
+    int8_t opt_in,
+    nimbus_1725_RustError* uniffi_out_err
+);
 
-nimbus_1725_RustBuffer ffi_nimbus_1725_rustbuffer_from_bytes(
-    nimbus_1725_ForeignBytes bytes, nimbus_1725_RustError* uniffi_out_err);
 
-void ffi_nimbus_1725_rustbuffer_free(nimbus_1725_RustBuffer buf,
-                                     nimbus_1725_RustError* uniffi_out_err);
 
-nimbus_1725_RustBuffer ffi_nimbus_1725_rustbuffer_reserve(
-    nimbus_1725_RustBuffer buf, int32_t additional,
-    nimbus_1725_RustError* uniffi_out_err);
+void
+nimbus_1725_NimbusClient_update_experiments(
+    uint64_t handle,
+    nimbus_1725_RustError* uniffi_out_err
+);
 
-void ffi_nimbus_1725_string_free(const char* cstr,
-                                 nimbus_1725_RustError* uniffi_out_err);
+
+
+void
+nimbus_1725_NimbusClient_opt_in_with_branch(
+    uint64_t handle,
+    nimbus_1725_RustBuffer experiment_slug,
+    nimbus_1725_RustBuffer branch,
+    nimbus_1725_RustError* uniffi_out_err
+);
+
+
+
+void
+nimbus_1725_NimbusClient_opt_out(
+    uint64_t handle,
+    nimbus_1725_RustBuffer experiment_slug,
+    nimbus_1725_RustError* uniffi_out_err
+);
+
+
+
+void
+nimbus_1725_NimbusClient_reset_enrollment(
+    uint64_t handle,
+    nimbus_1725_RustBuffer experiment_slug,
+    nimbus_1725_RustError* uniffi_out_err
+);
+
+
+nimbus_1725_RustBuffer
+ffi_nimbus_1725_rustbuffer_alloc(
+    int32_t size,
+    nimbus_1725_RustError* uniffi_out_err
+);
+
+
+nimbus_1725_RustBuffer
+ffi_nimbus_1725_rustbuffer_from_bytes(
+    nimbus_1725_ForeignBytes bytes,
+    nimbus_1725_RustError* uniffi_out_err
+);
+
+
+
+void
+ffi_nimbus_1725_rustbuffer_free(
+    nimbus_1725_RustBuffer buf,
+    nimbus_1725_RustError* uniffi_out_err
+);
+
+
+nimbus_1725_RustBuffer
+ffi_nimbus_1725_rustbuffer_reserve(
+    nimbus_1725_RustBuffer buf,
+    int32_t additional,
+    nimbus_1725_RustError* uniffi_out_err
+);
+
+
+
+void
+ffi_nimbus_1725_string_free(
+    const char* cstr,
+    nimbus_1725_RustError* uniffi_out_err
+);
 
 }  // extern "C"
 
@@ -117,8 +187,7 @@ CheckedInt<size_t> EstimateUTF8Length(size_t aUTF16Length) {
 /// Reads values out of a byte buffer received from Rust.
 class MOZ_STACK_CLASS Reader final {
  public:
-  explicit Reader(const nimbus_1725_RustBuffer& aBuffer)
-      : mBuffer(aBuffer), mOffset(0) {}
+  explicit Reader(const nimbus_1725_RustBuffer& aBuffer) : mBuffer(aBuffer), mOffset(0) {}
 
   /// Returns `true` if there are unread bytes in the buffer, or `false` if the
   /// current position has reached the end of the buffer. If `HasRemaining()`
@@ -355,7 +424,7 @@ class MOZ_STACK_CLASS Writer final {
     }
     nimbus_1725_RustError err = {0, nullptr};
     nimbus_1725_RustBuffer newBuffer = ffi_nimbus_1725_rustbuffer_reserve(
-        mBuffer, static_cast<int32_t>(aBytes), &err);
+      mBuffer, static_cast<int32_t>(aBytes), &err);
     if (err.mCode) {
       NS_ABORT_OOM(aBytes);
     }
@@ -514,8 +583,7 @@ struct ViaFfi<nsACString, nimbus_1725_RustBuffer, false> {
     nimbus_1725_ForeignBytes bytes = {
         static_cast<int32_t>(aLifted.Length()),
         reinterpret_cast<const uint8_t*>(aLifted.BeginReading())};
-    nimbus_1725_RustBuffer lowered =
-        ffi_nimbus_1725_rustbuffer_from_bytes(bytes, &err);
+    nimbus_1725_RustBuffer lowered = ffi_nimbus_1725_rustbuffer_from_bytes(bytes, &err);
     if (err.mCode) {
       MOZ_ASSERT(false, "Failed to lower `nsACString` into Rust string");
     }
@@ -575,7 +643,7 @@ struct ViaFfi<nsAString, nimbus_1725_RustBuffer, false> {
 
     nimbus_1725_RustError err = {0, nullptr};
     nimbus_1725_RustBuffer lowered = ffi_nimbus_1725_rustbuffer_alloc(
-        static_cast<int32_t>(maxSize.value()), &err);
+      static_cast<int32_t>(maxSize.value()), &err);
     if (err.mCode) {
       MOZ_ASSERT(false, "Failed to lower `nsAString` into Rust string");
     }
@@ -756,8 +824,7 @@ struct Serializable<Record<K, V>> {
 
 template <typename T>
 struct ViaFfi<T, nimbus_1725_RustBuffer> {
-  [[nodiscard]] static bool Lift(const nimbus_1725_RustBuffer& aLowered,
-                                 T& aLifted) {
+  [[nodiscard]] static bool Lift(const nimbus_1725_RustBuffer& aLowered, T& aLifted) {
     auto reader = Reader(aLowered);
     if (!Serializable<T>::ReadFrom(reader, aLifted)) {
       return false;
@@ -796,8 +863,7 @@ struct ViaFfi<nsACString, nimbus_1725_RustBuffer, true> {
   [[nodiscard]] static bool Lift(const nimbus_1725_RustBuffer& aLowered,
                                  nsACString& aLifted) {
     auto value = dom::Nullable<nsCString>();
-    if (!ViaFfi<dom::Nullable<nsCString>, nimbus_1725_RustBuffer>::Lift(
-            aLowered, value)) {
+    if (!ViaFfi<dom::Nullable<nsCString>, nimbus_1725_RustBuffer>::Lift(aLowered, value)) {
       return false;
     }
     if (value.IsNull()) {
@@ -815,8 +881,7 @@ struct ViaFfi<nsACString, nimbus_1725_RustBuffer, true> {
     if (!aLifted.IsVoid()) {
       value.SetValue() = aLifted;
     }
-    return ViaFfi<dom::Nullable<nsCString>, nimbus_1725_RustBuffer>::Lower(
-        value);
+    return ViaFfi<dom::Nullable<nsCString>, nimbus_1725_RustBuffer>::Lower(value);
   }
 };
 
@@ -825,8 +890,7 @@ struct ViaFfi<nsAString, nimbus_1725_RustBuffer, true> {
   [[nodiscard]] static bool Lift(const nimbus_1725_RustBuffer& aLowered,
                                  nsAString& aLifted) {
     auto value = dom::Nullable<nsString>();
-    if (!ViaFfi<dom::Nullable<nsString>, nimbus_1725_RustBuffer>::Lift(aLowered,
-                                                                       value)) {
+    if (!ViaFfi<dom::Nullable<nsString>, nimbus_1725_RustBuffer>::Lift(aLowered, value)) {
       return false;
     }
     if (value.IsNull()) {
@@ -842,8 +906,7 @@ struct ViaFfi<nsAString, nimbus_1725_RustBuffer, true> {
     if (!aLifted.IsVoid()) {
       value.SetValue() = aLifted;
     }
-    return ViaFfi<dom::Nullable<nsString>, nimbus_1725_RustBuffer>::Lower(
-        value);
+    return ViaFfi<dom::Nullable<nsString>, nimbus_1725_RustBuffer>::Lower(value);
   }
 };
 
@@ -892,30 +955,27 @@ struct ViaFfi<T, nimbus_1725_RustBuffer, true> {
 
 namespace nimbus_detail {
 
+
+
 template <>
 struct Serializable<AppContext> {
   [[nodiscard]] static bool ReadFrom(Reader& aReader, AppContext& aValue) {
     if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mAppId)) {
       return false;
     }
-    if (!Serializable<Optional<nsString>>::ReadFrom(aReader,
-                                                    aValue.mAppVersion)) {
+    if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mAppVersion)) {
       return false;
     }
-    if (!Serializable<Optional<nsString>>::ReadFrom(aReader,
-                                                    aValue.mAppBuild)) {
+    if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mAppBuild)) {
       return false;
     }
-    if (!Serializable<Optional<nsString>>::ReadFrom(aReader,
-                                                    aValue.mArchitecture)) {
+    if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mArchitecture)) {
       return false;
     }
-    if (!Serializable<Optional<nsString>>::ReadFrom(
-            aReader, aValue.mDeviceManufacturer)) {
+    if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mDeviceManufacturer)) {
       return false;
     }
-    if (!Serializable<Optional<nsString>>::ReadFrom(aReader,
-                                                    aValue.mDeviceModel)) {
+    if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mDeviceModel)) {
       return false;
     }
     if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mLocale)) {
@@ -924,16 +984,13 @@ struct Serializable<AppContext> {
     if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mOs)) {
       return false;
     }
-    if (!Serializable<Optional<nsString>>::ReadFrom(aReader,
-                                                    aValue.mOsVersion)) {
+    if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mOsVersion)) {
       return false;
     }
-    if (!Serializable<Optional<nsString>>::ReadFrom(
-            aReader, aValue.mAndroidSdkVersion)) {
+    if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mAndroidSdkVersion)) {
       return false;
     }
-    if (!Serializable<Optional<nsString>>::ReadFrom(aReader,
-                                                    aValue.mDebugTag)) {
+    if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mDebugTag)) {
       return false;
     }
     return true;
@@ -944,29 +1001,25 @@ struct Serializable<AppContext> {
     Serializable<Optional<nsString>>::WriteInto(aWriter, aValue.mAppVersion);
     Serializable<Optional<nsString>>::WriteInto(aWriter, aValue.mAppBuild);
     Serializable<Optional<nsString>>::WriteInto(aWriter, aValue.mArchitecture);
-    Serializable<Optional<nsString>>::WriteInto(aWriter,
-                                                aValue.mDeviceManufacturer);
+    Serializable<Optional<nsString>>::WriteInto(aWriter, aValue.mDeviceManufacturer);
     Serializable<Optional<nsString>>::WriteInto(aWriter, aValue.mDeviceModel);
     Serializable<Optional<nsString>>::WriteInto(aWriter, aValue.mLocale);
     Serializable<Optional<nsString>>::WriteInto(aWriter, aValue.mOs);
     Serializable<Optional<nsString>>::WriteInto(aWriter, aValue.mOsVersion);
-    Serializable<Optional<nsString>>::WriteInto(aWriter,
-                                                aValue.mAndroidSdkVersion);
+    Serializable<Optional<nsString>>::WriteInto(aWriter, aValue.mAndroidSdkVersion);
     Serializable<Optional<nsString>>::WriteInto(aWriter, aValue.mDebugTag);
   }
 };
 template <>
 struct Serializable<EnrolledExperiment> {
-  [[nodiscard]] static bool ReadFrom(Reader& aReader,
-                                     EnrolledExperiment& aValue) {
+  [[nodiscard]] static bool ReadFrom(Reader& aReader, EnrolledExperiment& aValue) {
     if (!Serializable<nsString>::ReadFrom(aReader, aValue.mSlug)) {
       return false;
     }
     if (!Serializable<nsString>::ReadFrom(aReader, aValue.mUserFacingName)) {
       return false;
     }
-    if (!Serializable<nsString>::ReadFrom(aReader,
-                                          aValue.mUserFacingDescription)) {
+    if (!Serializable<nsString>::ReadFrom(aReader, aValue.mUserFacingDescription)) {
       return false;
     }
     if (!Serializable<nsString>::ReadFrom(aReader, aValue.mBranchSlug)) {
@@ -984,8 +1037,7 @@ struct Serializable<EnrolledExperiment> {
 };
 template <>
 struct Serializable<RemoteSettingsConfig> {
-  [[nodiscard]] static bool ReadFrom(Reader& aReader,
-                                     RemoteSettingsConfig& aValue) {
+  [[nodiscard]] static bool ReadFrom(Reader& aReader, RemoteSettingsConfig& aValue) {
     if (!Serializable<nsString>::ReadFrom(aReader, aValue.mServerUrl)) {
       return false;
     }
@@ -1006,10 +1058,8 @@ struct Serializable<RemoteSettingsConfig> {
 };
 template <>
 struct Serializable<AvailableRandomizationUnits> {
-  [[nodiscard]] static bool ReadFrom(Reader& aReader,
-                                     AvailableRandomizationUnits& aValue) {
-    if (!Serializable<Optional<nsString>>::ReadFrom(aReader,
-                                                    aValue.mClientId)) {
+  [[nodiscard]] static bool ReadFrom(Reader& aReader, AvailableRandomizationUnits& aValue) {
+    if (!Serializable<Optional<nsString>>::ReadFrom(aReader, aValue.mClientId)) {
       return false;
     }
     if (!Serializable<int8_t>::ReadFrom(aReader, aValue.mDummy)) {
@@ -1018,12 +1068,12 @@ struct Serializable<AvailableRandomizationUnits> {
     return true;
   }
 
-  static void WriteInto(Writer& aWriter,
-                        const AvailableRandomizationUnits& aValue) {
+  static void WriteInto(Writer& aWriter, const AvailableRandomizationUnits& aValue) {
     Serializable<Optional<nsString>>::WriteInto(aWriter, aValue.mClientId);
     Serializable<int8_t>::WriteInto(aWriter, aValue.mDummy);
   }
 };
+
 
 }  // namespace nimbus_detail
 
