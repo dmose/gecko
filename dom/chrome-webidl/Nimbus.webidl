@@ -46,44 +46,48 @@ interface NimbusClient {
 
   
   [Throws]
-  DOMString? getExperimentBranch(
+  
+  Promise<DOMString?> getExperimentBranch(
        DOMString experiment_slug 
   );
   
   [Throws]
-  sequence<EnrolledExperiment> getActiveExperiments(
-  );
-
-  [Throws]
-  Promise<sequence<EnrolledExperiment>> getActiveExperimentsAsync(
+  
+  Promise<sequence<EnrolledExperiment>> getActiveExperiments(
   );
   
   [Throws]
-  boolean getGlobalUserParticipation(
+  
+  Promise<boolean> getGlobalUserParticipation(
   );
   
   [Throws]
-  void setGlobalUserParticipation(
+  
+  Promise<void> setGlobalUserParticipation(
        boolean opt_in 
   );
   
   [Throws]
-  void updateExperiments(
+  
+  Promise<void> updateExperiments(
   );
   
   [Throws]
-  void optInWithBranch(
+  
+  Promise<void> optInWithBranch(
        DOMString experiment_slug, 
        DOMString branch 
   );
   
   [Throws]
-  void optOut(
+  
+  Promise<void> optOut(
        DOMString experiment_slug 
   );
   
   [Throws]
-  void resetEnrollment(
+  
+  Promise<void> resetEnrollment(
        DOMString experiment_slug 
   );
   
