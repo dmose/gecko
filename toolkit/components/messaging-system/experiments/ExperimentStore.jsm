@@ -88,14 +88,14 @@ class ExperimentStore extends SharedDataMap {
       return [];
     }
 
-    return Object.values(this._data);
+    return this._data;
   }
 
   /**
    * @returns {Enrollment[]}
    */
   getAllActive() {
-    return this.getAll().filter(experiment => experiment.active);
+    return this.getAll();
   }
 
   _emitExperimentUpdates(experiment) {
