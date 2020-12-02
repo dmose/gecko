@@ -48,7 +48,7 @@ class SharedDataMap extends EventEmitter {
         path,
         {
           serverUrl: "https://settings.stage.mozaws.net/v1/",
-          collectionName: "messaging-experiments",
+          collectionName: "messaging-system",
           bucketName: "main-preview",
         },
         { dummy: 8 }
@@ -83,7 +83,7 @@ class SharedDataMap extends EventEmitter {
     if (!this._data) {
       return null;
     }
-    return this._data[key];
+    return this._data.find(e => e.slug === key);
   }
 
   set(key, value) {
