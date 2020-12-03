@@ -94,6 +94,7 @@ class _RemoteSettingsExperimentLoader {
       return;
     }
 
+    this.manager.onStartup();
     this.setTimer();
     CleanupManager.addCleanupHandler(() => this.uninit());
     this._initialized = true;

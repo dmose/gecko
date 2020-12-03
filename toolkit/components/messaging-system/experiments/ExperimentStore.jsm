@@ -44,7 +44,7 @@ class ExperimentStore extends SharedDataMap {
   activateBranch({ slug, featureId, sendExposurePing = true }) {
     for (let experiment of this.getAllActive()) {
       if (
-        experiment?.branch.feature.featureId === featureId ||
+        experiment?.branch?.feature.featureId === featureId ||
         experiment.slug === slug
       ) {
         if (sendExposurePing) {
@@ -100,7 +100,7 @@ class ExperimentStore extends SharedDataMap {
 
   _emitExperimentUpdates(experiment) {
     this.emit(`update:${experiment.slug}`, experiment);
-    this.emit(`update:${experiment.branch.feature.featureId}`, experiment);
+    this.emit(`update:${experiment.branch?.feature.featureId}`, experiment);
   }
 
   /**

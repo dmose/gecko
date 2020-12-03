@@ -461,7 +461,9 @@ class BaseAboutNewTabService {
       this.isAboutWelcomePrefEnabled &&
       experimentData?.slug == "multistage_aboutwelcome_test_treatment"
       // about:welcome should be enabled by default if no experiment exists.
-      // ExperimentAPI.isFeatureEnabled("aboutwelcome", true)
+      ExperimentAPI.getExperimentMetaData({
+        slug: "multistage_aboutwelcome_test",
+      })?.branch.slug === "multistage_aboutwelcome_test_treatment"
     ) {
       console.log("welcomeURL getter: about to return about:welcome");
       return ABOUT_WELCOME_URL;

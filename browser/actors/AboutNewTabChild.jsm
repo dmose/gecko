@@ -52,7 +52,9 @@ class AboutNewTabChild extends JSWindowActorChild {
       if (
         isAboutWelcomePrefEnabled &&
         // about:welcome should be enabled by default if no experiment exists.
-        ExperimentAPI.isFeatureEnabled("aboutwelcome", true) &&
+        ExperimentAPI.getExperimentMetaData({
+          slug: "multistage_aboutwelcome_test",
+        })?.branch.slug === "multistage_aboutwelcome_test_treatment" &&
         this.contentWindow.location.pathname.includes("welcome")
       ) {
         return;

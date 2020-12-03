@@ -89,11 +89,6 @@ class _ExperimentManager {
   async onStartup() {
     await this.store.init();
     this.store.on("exposure", this._onExposureEvent);
-    const restoredExperiments = this.store.getAllActive();
-
-    for (const experiment of restoredExperiments) {
-      this.setExperimentActive(experiment);
-    }
   }
 
   /**
@@ -379,7 +374,7 @@ class _ExperimentManager {
     console.error("experiment: ", experiment);
     TelemetryEnvironment.setExperimentActive(
       experiment.slug,
-      experiment.branchSlug,
+      experiment.slug,
       {
         type: `${TELEMETRY_EXPERIMENT_TYPE_PREFIX}${experiment.experimentType}`,
         enrollmentId:
