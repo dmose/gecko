@@ -32,7 +32,7 @@ class ExperimentStore extends SharedDataMap {
    */
   getExperimentForFeature(featureId) {
     return this.getAllActive().find(
-      experiment => experiment.branch.feature?.featureId === featureId
+      experiment => experiment.branch?.feature?.featureId === featureId
     );
   }
 

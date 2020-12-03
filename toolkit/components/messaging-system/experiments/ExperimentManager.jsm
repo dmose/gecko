@@ -376,9 +376,10 @@ class _ExperimentManager {
    * @memberof _ExperimentManager
    */
   setExperimentActive(experiment) {
+    console.error("experiment: ", experiment);
     TelemetryEnvironment.setExperimentActive(
       experiment.slug,
-      experiment.branch.slug,
+      experiment.branchSlug,
       {
         type: `${TELEMETRY_EXPERIMENT_TYPE_PREFIX}${experiment.experimentType}`,
         enrollmentId:
