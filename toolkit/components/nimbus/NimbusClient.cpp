@@ -146,7 +146,7 @@ already_AddRefed<Promise> NimbusClient::GetActiveExperiments(
   RefPtr<nsISerialEventTarget> backgroundET = GetBackgroundTarget();
   mozilla::InvokeAsync(
       backgroundET, __func__,
-      [mHandle=mHandle]() {
+      [mHandle = mHandle]() {
         if (XRE_IsParentProcess() && NS_IsMainThread()) {
           MOZ_CRASH("lambda called outside of parent process main thread");
         }
@@ -160,18 +160,23 @@ already_AddRefed<Promise> NimbusClient::GetActiveExperiments(
         }
 
         return MozPromise<nimbus_1725_RustBuffer, nimbus_1725_RustError, false>::CreateAndResolve(std::move(loweredRetVal_), __func__);
-  })->Then(GetCurrentSerialEventTarget(), __func__,
-    [promise](const nimbus_1725_RustBuffer loweredRetVal_) {
-      /* resolve DOM promise */
-      nsTArray<EnrolledExperiment> retVal_;
-      DebugOnly<bool> ok_ = nimbus_detail::ViaFfi<nsTArray<EnrolledExperiment>, nimbus_1725_RustBuffer, false>::Lift(loweredRetVal_, retVal_);
-      MOZ_ASSERT(ok_);
-      promise->MaybeResolve(retVal_);
-    },
-    [promise](nimbus_1725_RustError err) {
-      // XXX put the message into the error
-      // (a la aRv.ThrowOperationError(nsDependentCString(err.mMessage))
-      promise->MaybeReject(NS_ERROR_FAILURE);
+      })
+      ->Then(
+          GetCurrentSerialEventTarget(), __func__,
+          [promise](const nimbus_1725_RustBuffer loweredRetVal_) {
+            /* resolve DOM promise */
+            nsTArray<EnrolledExperiment> retVal_;
+            DebugOnly<bool> ok_ =
+                nimbus_detail::ViaFfi<nsTArray<EnrolledExperiment>,
+                                      nimbus_1725_RustBuffer,
+                                      false>::Lift(loweredRetVal_, retVal_);
+            MOZ_ASSERT(ok_);
+            promise->MaybeResolve(retVal_);
+          },
+          [promise](nimbus_1725_RustError err) {
+            // XXX put the message into the error
+            // (a la aRv.ThrowOperationError(nsDependentCString(err.mMessage))
+            promise->MaybeRejectWithUnknownError(nsDependentCString(err.mMessage));
     });
   return promise.forget(); // XXX i assume .forget is needed, check on this
 }
