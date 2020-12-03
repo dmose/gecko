@@ -54,7 +54,7 @@ impl SettingsClient for Client {
 
     fn get_experiments(&self) -> Result<Vec<Experiment>> {
         let path = format!(
-            "buckets/{}/collections/{}/records",
+            "buckets/{}/collections/{}/records?_since=0",
             &self.bucket_name, &self.collection_name
         );
         let url = self.base_url.join(&path)?;
