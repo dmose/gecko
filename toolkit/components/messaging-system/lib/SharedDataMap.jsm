@@ -51,7 +51,9 @@ class SharedDataMap extends EventEmitter {
           collectionName: "messaging-system",
           bucketName: "main-preview",
         },
-        { dummy: 8 }
+        // control: 9d275791-3f31-4549-b30c-e32c750e4787
+        // treatment: 542213c0-9aef-47eb-bc6b-3b8529736ba2
+        { dummy: 8, clientId: "9d275791-3f31-4549-b30c-e32c750e4787" }
       );
     } else {
       this._syncFromParent();

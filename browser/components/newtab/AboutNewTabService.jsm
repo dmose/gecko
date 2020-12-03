@@ -459,7 +459,7 @@ class BaseAboutNewTabService {
 
     if (
       this.isAboutWelcomePrefEnabled &&
-      experimentData?.slug == "multistage_aboutwelcome_test_treatment"
+      experimentData?.branch?.slug == "multistage_aboutwelcome_test_treatment"
     ) {
       console.log("welcomeURL getter: about to return about:welcome");
       return ABOUT_WELCOME_URL;
