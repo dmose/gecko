@@ -452,14 +452,22 @@ class BaseAboutNewTabService {
      *
      * This is calculated in the same way the default URL is.
      */
+    let experimentData = ExperimentAPI.getExperimentMetaData(
+      {slug: "multistage_aboutwelcome_test"}
+    );
+
 
     if (
       this.isAboutWelcomePrefEnabled &&
+      experimentData?.slug == "multistage_aboutwelcome_test_treatment"
       // about:welcome should be enabled by default if no experiment exists.
-      ExperimentAPI.isFeatureEnabled("aboutwelcome", true)
+      // ExperimentAPI.isFeatureEnabled("aboutwelcome", true)
     ) {
+      console.log("welcomeURL getter: about to return about:welcome");
       return ABOUT_WELCOME_URL;
     }
+    console.log("welcomeURL getter: about to return default URL");
+
     return this.defaultURL;
   }
 

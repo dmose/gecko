@@ -39,6 +39,16 @@ class AboutNewTabChild extends JSWindowActorChild {
     if (event.type == "DOMContentLoaded") {
       // If the separate about:welcome page is enabled, we can skip all of this,
       // since that mode doesn't load any of the Activity Stream bits.
+      let experimentData = ExperimentAPI.getExperimentMetaData(
+        {slug: "multistage_aboutwelcome_test"}
+      );
+      if (
+        experimentData?.slug == "multistage_aboutwelcome_test_treatment" &&
+        this.contentWindow.location.pathname.includes("welcome")
+      ) {
+        return;
+      }
+
       if (
         isAboutWelcomePrefEnabled &&
         // about:welcome should be enabled by default if no experiment exists.

@@ -61,7 +61,12 @@ class SharedDataMap extends EventEmitter {
 
   async init(runSync = false) {
     if (!this._isReady && this.isParent) {
-      this._data = await this.client.getActiveExperiments();
+      try {
+        this._data = await this.client.getActiveExperiments();
+      } catch (ex) {
+        console.log("gAE blew up", ex);
+      }
+
       this._syncToChildren({ flush: true });
       this._checkIfReady();
     }
