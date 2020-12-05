@@ -91,7 +91,7 @@ const ExperimentAPI = {
         slug: experimentData.slug,
         active: experimentData.active,
         exposurePingSent: experimentData.exposurePingSent,
-        branch: { slug: experimentData.branch.slug },
+        branch: { slug: experimentData.branchSlug },
       };
     }
 

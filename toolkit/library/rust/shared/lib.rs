@@ -6,6 +6,9 @@
 
 extern crate geckoservo;
 
+#[cfg(feature = "rust_nimbus_sdk")]
+extern crate nimbus;
+
 extern crate app_services_logger;
 #[cfg(feature = "cubeb-remoting")]
 extern crate audioipc_client;

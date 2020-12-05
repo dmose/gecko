@@ -93,6 +93,11 @@ if CONFIG["MOZ_GLEAN"]:
         "Glean.webidl",
     ]
 
+if CONFIG["MOZ_RUST_NIMBUS_SDK"]:
+    WEBIDL_FILES += [
+        "Nimbus.webidl"
+    ]
+
 WEBIDL_FILES += [
     "PrioEncoder.webidl",
 ]

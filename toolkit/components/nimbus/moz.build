@@ -1,0 +1,14 @@
+EXPORTS.mozilla.dom += [
+    'NimbusClient.h',
+    'NimbusShared.h',
+]
+UNIFIED_SOURCES += [
+    'NimbusClient.cpp',
+]
+
+FINAL_LIBRARY = 'xul'
+
+XPCSHELL_TESTS_MANIFESTS += ['test/xpcshell/xpcshell.ini']
+
+# with Files('**'):
+#    BUG_COMPONENT = ('Toolkit', 'Nimbus SDK') maybe?

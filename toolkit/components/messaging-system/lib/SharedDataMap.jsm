@@ -40,14 +40,21 @@ class SharedDataMap extends EventEmitter {
     this._data = null;
 
     if (this.isParent) {
-      // Lazy-load JSON file that backs Storage instances.
-      XPCOMUtils.defineLazyGetter(this, "_store", () => {
-        const path =
-          options.path || // Only used in tests
-          OS.Path.join(OS.Constants.Path.profileDir, `${sharedDataKey}.json`);
-        const store = new JSONFile({ path });
-        return store;
-      });
+      let path = OS.Path.join(OS.Constants.Path.profileDir, "nimbus.db");
+      this.client = new NimbusClient(
+        {
+          appId: "123",
+        },
+        path,
+        {
+          serverUrl: "https://settings.stage.mozaws.net/v1/",
+          collectionName: "messaging-system",
+          bucketName: "main-preview",
+        },
+        // control: 9d275791-3f31-4549-b30c-e32c750e4787
+        // treatment: 542213c0-9aef-47eb-bc6b-3b8529736ba2
+        { dummy: 8, clientId: Services.prefs.getStringPref("app.normandy.user_id") }
+      );
     } else {
       this._syncFromParent();
       Services.cpmm.sharedData.addEventListener("change", this);
@@ -56,12 +63,12 @@ class SharedDataMap extends EventEmitter {
 
   async init(runSync = false) {
     if (!this._isReady && this.isParent) {
-      if (runSync) {
-        this._store.ensureDataReady();
-      } else {
-        await this._store.load();
+      try {
+        this._data = await this.client.getActiveExperiments();
+      } catch (ex) {
+        console.log("gAE blew up", ex);
       }
-      this._data = this._store.data;
+
       this._syncToChildren({ flush: true });
       this._checkIfReady();
     }
@@ -83,7 +90,7 @@ class SharedDataMap extends EventEmitter {
     if (!this._data) {
       return null;
     }
-    return this._data[key];
+    return this._data.find(e => e.slug === key);
   }
 
   set(key, value) {
@@ -92,8 +99,6 @@ class SharedDataMap extends EventEmitter {
         "Setting values from within a content process is not allowed"
       );
     }
-    this._store.data[key] = value;
-    this._store.saveSoon();
     this._syncToChildren();
     this._notifyUpdate();
   }
