@@ -73,9 +73,6 @@ SPHINX_TREES['nodejs-docs'] = 'nodejs-docs'
 with Files("tryselect/docs/**"):
     SCHEDULES.exclusive = ["docs"]
 
-with Files('tryselect/docs/**'):
-    SCHEDULES.exclusive = ['docs']
-
 CRAMTEST_MANIFESTS += [
     "tryselect/test/cram.ini",
 ]
