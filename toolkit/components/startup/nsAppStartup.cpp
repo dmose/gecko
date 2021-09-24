@@ -707,6 +707,8 @@ nsAppStartup::CreateChromeWindow(nsIWebBrowserChrome* aParent,
   *aCancel = false;
   *_retval = 0;
 
+  NS_WARNING("in nsAppStartup::CreateChromeWinodow");
+
   // Non-modal windows cannot be opened if we are attempting to quit
   if (mAttemptingQuit &&
       (aChromeFlags & nsIWebBrowserChrome::CHROME_MODAL) == 0)

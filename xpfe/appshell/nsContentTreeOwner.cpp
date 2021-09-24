@@ -527,6 +527,7 @@ nsContentTreeOwner::ProvideWindow(
     dom::BrowsingContext** aReturn) {
   NS_ENSURE_ARG_POINTER(aOpenWindowInfo);
 
+NS_WARNING("in nsContentTreeOwner::ProvideWindow");
   RefPtr<dom::BrowsingContext> parent = aOpenWindowInfo->GetParent();
 
   *aReturn = nullptr;

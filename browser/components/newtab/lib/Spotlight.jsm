@@ -39,7 +39,8 @@ const Spotlight = {
 
     try {
       await win.gDialogBox.open(
-        "https://master.d2ua8wdvteablj.amplifyapp.com/spotlight.html", [
+        "chrome://browser/content/spotlight.html", [
+        // "https://master.d2ua8wdvteablj.amplifyapp.com/spotlight.html", [
         message.content,
         params,
       ]);

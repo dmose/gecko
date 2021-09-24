@@ -360,6 +360,7 @@ nsWindowWatcher::OpenWindow2(mozIDOMWindowProxy* aParent,
                              BrowsingContext** aResult) {
   nsCOMPtr<nsIArray> argv = ConvertArgsToArray(aArguments);
 
+NS_WARNING("in nsWindowWathcer::OpenWIndow2");
   uint32_t argc = 0;
   if (argv) {
     argv->GetLength(&argc);
@@ -591,6 +592,7 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     nsDocShellLoadState* aLoadState, BrowsingContext** aResult) {
   MOZ_ASSERT_IF(aForceNoReferrer, aForceNoOpener);
 
+NS_WARNING("in nsWindowWatcher::OpenWindowInternal");
   nsresult rv = NS_OK;
   bool isNewToplevelWindow = false;
   bool windowIsNew = false;
@@ -608,6 +610,8 @@ nsresult nsWindowWatcher::OpenWindowInternal(
   nsCOMPtr<nsPIDOMWindowOuter> parentWindow =
       aParent ? nsPIDOMWindowOuter::From(aParent) : nullptr;
 
+NS_WARN_IF( !parentWindow);
+
   NS_ENSURE_ARG_POINTER(aResult);
   *aResult = 0;
 
@@ -617,9 +621,10 @@ nsresult nsWindowWatcher::OpenWindowInternal(
   }
 
   if (parentWindow) {
+          NS_WARNING("trying to get parentTreeOwner");
     parentTreeOwner = parentWindow->GetTreeOwner();
   }
-
+NS_WARN_IF(!parentTreeOwner);
   // We expect BrowserParent to have provided us the absolute URI of the window
   // we're to open, so there's no need to call URIfromURL (or more importantly,
   // to check for a chrome URI, which cannot be opened from a remote tab).
@@ -666,6 +671,8 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     return NS_ERROR_ABORT;
   }
 
+NS_WARNING("OWI checkpoint 1");
+
   // try to find an extant browsing context with the given name
   newBC = GetBrowsingContextByName(name, aForceNoOpener, parentBC);
 
@@ -696,6 +703,8 @@ nsresult nsWindowWatcher::OpenWindowInternal(
 
   SizeSpec sizeSpec;
   CalcSizeSpec(features, hasChromeParent, sizeSpec);
+
+NS_WARNING("OWI checkpoint 2");
 
   // Make sure we calculate the chromeFlags *before* we push the
   // callee context onto the context stack so that
@@ -730,6 +739,8 @@ nsresult nsWindowWatcher::OpenWindowInternal(
       return NS_ERROR_INVALID_ARG;
     }
   }
+
+NS_WARNING("OWI checkpoint 3");
 
   // If we're opening a content window from a content window, we need to exactly
   // inherit fission and e10s status flags from parentBC. Only new toplevel
@@ -766,6 +777,7 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     // caller or of the parent based on whether the docshell type is chrome or
     // content.
 
+NS_WARNING("inside open() is called from chrome");
     nsCOMPtr<nsIGlobalObject> parentGlobalObject = do_QueryInterface(aParent);
     if (!aParent) {
       jsapiChromeGuard.Init();
@@ -777,7 +789,9 @@ nsresult nsWindowWatcher::OpenWindowInternal(
   // Information used when opening new content windows. This object will be
   // passed through to the inner nsFrameLoader.
   RefPtr<nsOpenWindowInfo> openWindowInfo;
-  if (!newBC && !windowTypeIsChrome) {
+//   if (!newBC && !windowTypeIsChrome) {
+  if (!windowTypeIsChrome) {
+NS_WARNING("in openWindowINfo thingy");
     openWindowInfo = new nsOpenWindowInfo();
     openWindowInfo->mForceNoOpener = aForceNoOpener;
     openWindowInfo->mParent = parentBC;
@@ -828,15 +842,18 @@ nsresult nsWindowWatcher::OpenWindowInternal(
       }
     }
 
+NS_WARNING("Now check whether");
     // Now check whether it's ok to ask a window provider for a window.  Don't
     // do it if we're opening a dialog or if our parent is a chrome window or
     // if we're opening something that has modal, dialog, or chrome flags set.
-    if (parentTreeOwner && !aDialog && parentBC->IsContent() &&
-        !(chromeFlags & (nsIWebBrowserChrome::CHROME_MODAL |
-                         nsIWebBrowserChrome::CHROME_OPENAS_DIALOG |
-                         nsIWebBrowserChrome::CHROME_OPENAS_CHROME))) {
+     if (parentTreeOwner && parentBC->IsContent() ) { //&&
+//     if (parentTreeOwner && !aDialog && parentBC->IsContent() &&
+//        !(chromeFlags & (// nsIWebBrowserChrome::CHROME_MODAL |
+//                         nsIWebBrowserChrome::CHROME_OPENAS_DIALOG |
+                         //nsIWebBrowserChrome::CHROME_OPENAS_CHROME))) {
       MOZ_ASSERT(openWindowInfo);
 
+NS_WARNING("about to try to find a provider");
       nsCOMPtr<nsIWindowProvider> provider = do_GetInterface(parentTreeOwner);
       if (provider) {
         rv = provider->ProvideWindow(openWindowInfo, chromeFlags, aCalledFromJS,
@@ -885,6 +902,7 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     nsCOMPtr<nsIWebBrowserChrome> parentChrome(
         do_GetInterface(parentTreeOwner));
 
+NS_WARNING("about to check modality");
     // is the parent (if any) modal? if so, we must be, too.
     bool weAreModal = (chromeFlags & nsIWebBrowserChrome::CHROME_MODAL) != 0;
     newWindowShouldBeModal = weAreModal;
@@ -900,6 +918,7 @@ nsresult nsWindowWatcher::OpenWindowInternal(
                      nsIWebBrowserChrome::CHROME_DEPENDENT;
     }
 
+NS_WARNING("gonna try to create a modal window maybe");
     // Make sure to not create modal windows if our parent is invisible and
     // isn't a chrome window.  Otherwise we can end up in a bizarre situation
     // where we can't shut down because an invisible window is open.  If
@@ -938,6 +957,8 @@ nsresult nsWindowWatcher::OpenWindowInternal(
         parentTopInnerWindow->Suspend();
       }
 
+NS_WARNING("about to call CreateChromeWindow");
+
       /* We can give the window creator some hints. The only hint at this time
          is whether the opening window is in a situation that's likely to mean
          this is an unrequested popup window we're creating. However we're not
@@ -970,6 +991,7 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     }
   }
 
+NS_WARNING("better have a window...");
   // better have a window to use by this point
   if (!newBC) {
     return rv;
@@ -1013,6 +1035,7 @@ nsresult nsWindowWatcher::OpenWindowInternal(
   // definition, always in-process.
   MOZ_DIAGNOSTIC_ASSERT(!isNewToplevelWindow || newDocShell);
 
+  NS_WARNING("about to copy sandbox falgs");
   // Copy sandbox flags to the new window if activeDocsSandboxFlags says to do
   // so.  Note that it's only nonzero if the window is new, so clobbering
   // sandbox flags on the window makes sense in that case.
@@ -1158,6 +1181,7 @@ nsresult nsWindowWatcher::OpenWindowInternal(
       newBC->UseRemoteSubframes() ==
       !!(chromeFlags & nsIWebBrowserChrome::CHROME_FISSION_WINDOW));
 
+NS_WARNING("before pInnerWin");
   nsCOMPtr<nsPIDOMWindowInner> pInnerWin =
       parentWindow ? parentWindow->GetCurrentInnerWindow() : nullptr;
   ;
@@ -1213,6 +1237,7 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     }
   }
 
+NS_WARNING("before isNewTopLevelWindow");
   if (isNewToplevelWindow) {
     // Notify observers that the window is open and ready.
     // The window has not yet started to load a document.
@@ -1228,6 +1253,7 @@ nsresult nsWindowWatcher::OpenWindowInternal(
   // userContextId.
   MOZ_ASSERT_IF(newDocShell, CheckUserContextCompatibility(newDocShell));
 
+NS_WARNING("if this");
   // If this tab or window has been opened by a window.open call, we have to
   // provide all the data needed to send a
   // webNavigation.onCreatedNavigationTarget event.
@@ -1293,17 +1319,23 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     SizeOpenedWindow(newTreeOwner, aParent, isCallerChrome, sizeSpec);
   }
 
+NS_WARNING("before windowIsModal");
+
   if (windowIsModal) {
+        NS_WARNING("before NS_ERROR_NOT_IMPL");
     NS_ENSURE_TRUE(newDocShell, NS_ERROR_NOT_IMPLEMENTED);
 
+NS_WARNING("before newTreeOwner");
     nsCOMPtr<nsIDocShellTreeOwner> newTreeOwner;
     newDocShell->GetTreeOwner(getter_AddRefs(newTreeOwner));
     nsCOMPtr<nsIWebBrowserChrome> newChrome(do_GetInterface(newTreeOwner));
 
+NS_WARNING("before Throw an xecetp");
     // Throw an exception here if no web browser chrome is available,
     // we need that to show a modal window.
     NS_ENSURE_TRUE(newChrome, NS_ERROR_NOT_AVAILABLE);
 
+NS_WARNING("before Dispatch dialog");
     // Dispatch dialog events etc, but we only want to do that if
     // we're opening a modal content window (the helper classes are
     // no-ops if given no window), for chrome dialogs we don't want to
@@ -1313,13 +1345,16 @@ nsresult nsWindowWatcher::OpenWindowInternal(
     // maintain the state on them.
     nsAutoWindowStateHelper windowStateHelper(parentWindow);
 
+NS_WARNING("before if (!windw");
     if (!windowStateHelper.DefaultEnabled()) {
       // Default to cancel not opening the modal window.
       NS_RELEASE(*aResult);
 
+NS_WARNING("about to return");
       return NS_OK;
     }
 
+NS_WARNING("about to set isAppModal");
     bool isAppModal = false;
     nsCOMPtr<nsIBaseWindow> parentWindow(do_GetInterface(newTreeOwner));
     nsCOMPtr<nsIWidget> parentWidget;
@@ -1341,6 +1376,8 @@ nsresult nsWindowWatcher::OpenWindowInternal(
       newChrome->ShowAsModal();
     }
   }
+
+NS_WARNING("before If a webiste");
   // If a website opens a popup exit DOM fullscreen
   if (StaticPrefs::full_screen_api_exit_on_windowOpen() && windowIsNew &&
       aCalledFromJS && !hasChromeParent && !isCallerChrome && parentWindow) {

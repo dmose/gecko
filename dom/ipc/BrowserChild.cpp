@@ -823,6 +823,7 @@ BrowserChild::ProvideWindow(nsIOpenWindowInfo* aOpenWindowInfo,
                             BrowsingContext** aReturn) {
   *aReturn = nullptr;
 
+NS_WARNING("in BrowserChild::ProvideWindow");
   RefPtr<BrowsingContext> parent = aOpenWindowInfo->GetParent();
 
   int32_t openLocation = nsWindowWatcher::GetWindowOpenLocation(
