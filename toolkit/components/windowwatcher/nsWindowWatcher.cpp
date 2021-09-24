@@ -789,8 +789,8 @@ NS_WARNING("inside open() is called from chrome");
   // Information used when opening new content windows. This object will be
   // passed through to the inner nsFrameLoader.
   RefPtr<nsOpenWindowInfo> openWindowInfo;
-//   if (!newBC && !windowTypeIsChrome) {
-  if (!windowTypeIsChrome) {
+  if (!newBC && !windowTypeIsChrome) {
+//   if (!windowTypeIsChrome) {
 NS_WARNING("in openWindowINfo thingy");
     openWindowInfo = new nsOpenWindowInfo();
     openWindowInfo->mForceNoOpener = aForceNoOpener;
