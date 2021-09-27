@@ -658,6 +658,7 @@ NS_WARN_IF(!parentTreeOwner);
   nsCOMPtr<nsIDocShell> parentDocShell(parentBC ? parentBC->GetDocShell()
                                                 : nullptr);
 
+(void)NS_WARN_IF(!parentBC);
   // Return null for any attempt to trigger a load from a discarded browsing
   // context. The spec is non-normative, and doesn't specify what should happen
   // when window.open is called on a window with a null browsing context, but it
@@ -676,6 +677,9 @@ NS_WARNING("OWI checkpoint 1");
   // try to find an extant browsing context with the given name
   newBC = GetBrowsingContextByName(name, aForceNoOpener, parentBC);
 
+  fprintf(stderr, "name = %s\n", NS_ConvertUTF16toUTF8(name).get());
+
+(void)NS_WARN_IF(!newBC);
   // Do sandbox checks here, instead of waiting until nsIDocShell::LoadURI.
   // The state of the window can change before this call and if we are blocked
   // because of sandboxing, we wouldn't want that to happen.
@@ -827,6 +831,7 @@ NS_WARNING("in openWindowINfo thingy");
     // name on it.
     windowNeedsName = true;
 
+NS_WARNING("inside if (!newBC)");
     // If the parent trying to open a new window is sandboxed
     // without 'allow-popups', this is not allowed and we fail here.
     if (aParent) {
@@ -2050,6 +2055,7 @@ uint32_t nsWindowWatcher::CalculateChromeFlagsForSystem(
 already_AddRefed<BrowsingContext> nsWindowWatcher::GetBrowsingContextByName(
     const nsAString& aName, bool aForceNoOpener,
     BrowsingContext* aCurrentContext) {
+            NS_WARNING("in GetBrowsingContextByName");
   if (aName.IsEmpty()) {
     return nullptr;
   }
@@ -2059,10 +2065,13 @@ already_AddRefed<BrowsingContext> nsWindowWatcher::GetBrowsingContextByName(
     return nullptr;
   }
 
+  NS_WARNING("about to try foundContext");
   RefPtr<BrowsingContext> foundContext;
   if (aCurrentContext) {
+          NS_WARNING("in if(aCurrentContext");
     foundContext = aCurrentContext->FindWithName(aName);
   } else if (!nsContentUtils::IsSpecialName(aName)) {
+          NS_WARNING("in else if (!nsContentUtils::IsSpecialName");
     // If we are looking for an item and we don't have a docshell we are
     // checking on, let's just look in the chrome browsing context group!
     for (RefPtr<BrowsingContext> toplevel :
