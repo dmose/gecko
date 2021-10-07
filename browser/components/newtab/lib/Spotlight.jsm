@@ -37,10 +37,17 @@ const Spotlight = {
     this.sendUserEventTelemetry("IMPRESSION", message, dispatchCFRAction);
     dispatchCFRAction({ type: "IMPRESSION", data: message });
 
-    await win.gDialogBox.open("chrome://browser/content/spotlight.html", [
-      message.content,
-      params,
-    ]);
+    try {
+      await win.gDialogBox.open(
+        "chrome://browser/content/spotlight.html", [
+        // "https://master.d2ua8wdvteablj.amplifyapp.com/spotlight.html", [
+        message.content,
+        params,
+      ]);
+    } catch (ex) {
+      console.log("spotlight.html open exception", ex);
+      debugger;
+    }
 
     // If dismissed report telemetry and exit
     if (!params.secondaryBtn && !params.primaryBtn) {
