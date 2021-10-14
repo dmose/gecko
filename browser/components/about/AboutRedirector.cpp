@@ -137,6 +137,11 @@ static const RedirEntry kRedirMap[] = {
     {"ion", "chrome://browser/content/ion.html",
      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT |
          nsIAboutModule::IS_SECURE_CHROME_UI},
+    {"spotlight", "https://master.d2ua8wdvteablj.amplifyapp.com/spotlight.html",
+     nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+         nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
+         nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
+         nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::MAKE_LINKABLE},
 };
 
 static nsAutoCString GetAboutModuleName(nsIURI* aURI) {

@@ -1107,14 +1107,14 @@ nsresult nsContentSecurityManager::CheckAllowLoadInSystemPrivilegedContext(
   // schemes to cover are HTTP, HTTPS, data, blob in that order. Meta bug
   // 1725112 will track upcoming restrictions
   if (contentPolicyType == ExtContentPolicy::TYPE_SUBDOCUMENT) {
-    if (StaticPrefs::security_disallow_privileged_https_subdocuments_loads() &&
-        (finalURI->SchemeIs("http") || finalURI->SchemeIs("https"))) {
-#ifdef DEBUG
-      MOZ_CRASH("Disallowing SystemPrincipal load of subdocuments on HTTP(S).");
-#endif
-      aChannel->Cancel(NS_ERROR_CONTENT_BLOCKED);
-      return NS_ERROR_CONTENT_BLOCKED;
-    }
+//     if (StaticPrefs::security_disallow_privileged_https_subdocuments_loads() &&
+//         (finalURI->SchemeIs("http") || finalURI->SchemeIs("https"))) {
+// #ifdef DEBUG
+//       MOZ_CRASH("Disallowing SystemPrincipal load of subdocuments on HTTP(S).");
+// #endif
+//       aChannel->Cancel(NS_ERROR_CONTENT_BLOCKED);
+//       return NS_ERROR_CONTENT_BLOCKED;
+//     }
     if ((StaticPrefs::security_disallow_privileged_data_subdocuments_loads()) &&
         (finalURI->SchemeIs("data"))) {
 #ifdef DEBUG
