@@ -2677,6 +2677,10 @@ bool nsFrameLoader::TryRemoteBrowserInternal() {
       if (!(specIgnoringRef.EqualsLiteral("about:addons") ||
             specIgnoringRef.EqualsLiteral(
                 "chrome://mozapps/content/extensions/aboutaddons.html") ||
+            specIgnoringRef.EqualsLiteral("about:spotlight") ||
+            specIgnoringRef.EqualsLiteral(
+                "https://master.d2ua8wdvteablj.amplifyapp.com/"
+                "spotlight.html") ||
 #ifdef MOZ_THUNDERBIRD
             specIgnoringRef.EqualsLiteral("about:preferences") ||
 #endif
@@ -2692,7 +2696,7 @@ bool nsFrameLoader::TryRemoteBrowserInternal() {
 
     if (!mOwnerContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::type,
                                     nsGkAtoms::content, eIgnoreCase)) {
-      return false;
+      return true;
     }
   }
 

@@ -667,10 +667,10 @@ bool ContentCacheInParent::HandleQueryContentEvent(
       if (NS_WARN_IF(!IsSelectionValid())) {
         // If content cache hasn't been initialized properly, make the query
         // failed.
-        MOZ_LOG(sContentCacheLog, LogLevel::Error,
-                ("0x%p HandleQueryContentEvent(), FAILED because mSelection is "
-                 "not valid",
-                 this));
+        // MOZ_LOG(sContentCacheLog, LogLevel::Error,
+        //         ("0x%p HandleQueryContentEvent(), FAILED because mSelection is "
+        //          "not valid",
+        //          this));
         return false;
       }
       if (!mSelection->Collapsed() &&
