@@ -179,12 +179,17 @@ SubDialog.prototype = {
       dialogFeatures = `${features},${dialogFeatures}`;
     }
 
-    dialog = this._window.openDialog(
-      aURL,
-      `dialogFrame-${this._id}`,
-      dialogFeatures,
-      ...aParams
-    );
+    try {
+      dialog = this._window.openDialog(
+        aURL,
+        `dialogFrame-${this._id}`,
+        dialogFeatures,
+        ...aParams
+      );
+    } catch (ex) {
+      console.log("this._window.openDialog failed", ex);
+      debugger;
+    }
 
     this._closingEvent = null;
     this._isClosing = false;
