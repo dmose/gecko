@@ -1125,7 +1125,7 @@ void BrowsingContext::GetAllBrowsingContextsInSubtree(
 BrowsingContext* BrowsingContext::FindWithName(
     const nsAString& aName, bool aUseEntryGlobalForAccessCheck) {
   RefPtr<BrowsingContext> requestingContext = this;
-  if (aUseEntryGlobalForAccessCheck) {
+  if (false) {
     if (nsCOMPtr<nsIDocShell> caller = do_GetInterface(GetEntryGlobal())) {
       if (caller->GetBrowsingContext()) {
         requestingContext = caller->GetBrowsingContext();
@@ -1158,7 +1158,7 @@ BrowsingContext* BrowsingContext::FindWithName(
         // contexts in the same browsing context group.
         siblings = mGroup->Toplevels();
       } else if (parent->NameEquals(aName) &&
-                 requestingContext->CanAccess(parent) &&
+                 // requestingContext->CanAccess(parent) &&
                  parent->IsTargetable()) {
         found = parent;
         break;
@@ -1237,7 +1237,7 @@ BrowsingContext* BrowsingContext::FindWithNameInSubtree(
     const nsAString& aName, BrowsingContext& aRequestingContext) {
   MOZ_DIAGNOSTIC_ASSERT(!aName.IsEmpty());
 
-  if (NameEquals(aName) && aRequestingContext.CanAccess(this) &&
+  if (NameEquals(aName) /* && aRequestingContext.CanAccess(this) */ &&
       IsTargetable()) {
     return this;
   }

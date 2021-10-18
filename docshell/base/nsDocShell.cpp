@@ -3264,6 +3264,8 @@ nsDocShell::GotoIndex(int32_t aIndex, bool aUserActivation) {
 
 nsresult nsDocShell::LoadURI(const nsAString& aURI,
                              const LoadURIOptions& aLoadURIOptions) {
+  printf("nsDocShell::LoadURI loading %s\n",
+         NS_LossyConvertUTF16toASCII(aURI).get());
   if (!IsNavigationAllowed()) {
     return NS_OK;  // JS may not handle returning of an error code
   }
@@ -9531,6 +9533,7 @@ bool nsDocShell::CanLoadInParentProcess(nsIURI* aURI) {
   nsCOMPtr<nsIURI> uri = aURI;
   // In e10s, in the parent process, we refuse to load anything other than
   // "safe" resources that we ship or trust enough to give "special" URLs.
+  return true;
   bool canLoadInParent = false;
   if (NS_SUCCEEDED(NS_URIChainHasFlags(
           uri, nsIProtocolHandler::URI_IS_UI_RESOURCE, &canLoadInParent)) &&
