@@ -79,8 +79,8 @@ void BrowsingContextGroup::Unregister(nsISupports* aContext) {
 
 void BrowsingContextGroup::EnsureHostProcess(ContentParent* aProcess) {
   MOZ_DIAGNOSTIC_ASSERT(!mDestroyed);
-  MOZ_DIAGNOSTIC_ASSERT(this != sChromeGroup,
-                        "cannot have content host for chrome group");
+//   MOZ_DIAGNOSTIC_ASSERT(this != sChromeGroup,
+//                         "cannot have content host for chrome group");
   MOZ_DIAGNOSTIC_ASSERT(aProcess->GetRemoteType() != PREALLOC_REMOTE_TYPE,
                         "cannot use preallocated process as host");
   MOZ_DIAGNOSTIC_ASSERT(!aProcess->GetRemoteType().IsEmpty(),

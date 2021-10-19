@@ -2555,7 +2555,7 @@ void BrowsingContext::SendCommitTransaction(ContentChild* aChild,
 
 BrowsingContext::IPCInitializer BrowsingContext::GetIPCInitializer() {
   MOZ_DIAGNOSTIC_ASSERT(mEverAttached);
-  MOZ_DIAGNOSTIC_ASSERT(mType == Type::Content);
+//   MOZ_DIAGNOSTIC_ASSERT(mType == Type::Content);
 
   IPCInitializer init;
   init.mId = Id();
