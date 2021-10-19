@@ -2694,10 +2694,10 @@ bool nsFrameLoader::TryRemoteBrowserInternal() {
       return false;
     }
 
-    if (!mOwnerContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::type,
-                                    nsGkAtoms::content, eIgnoreCase)) {
-      return true;
-    }
+//     if (!mOwnerContent->AttrValueIs(kNameSpaceID_None, nsGkAtoms::type,
+//                                     nsGkAtoms::content, eIgnoreCase)) {
+//       return false;
+//     }
   }
 
   uint32_t chromeFlags = 0;
