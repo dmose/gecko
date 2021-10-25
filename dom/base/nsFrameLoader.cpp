@@ -1112,15 +1112,15 @@ bool nsFrameLoader::ShowRemoteFrame(const ScreenIntSize& size,
   // cross-process layers; need to figure out what behavior we really
   // want here.  For now, hack.
   if (!mRemoteBrowserShown) {
-    if (!mOwnerContent || !mOwnerContent->GetComposedDoc()) {
-      return false;
-    }
+//     if (!mOwnerContent || !mOwnerContent->GetComposedDoc()) {
+//       return false;
+//     }
 
     // We never want to host remote frameloaders in simple popups, like menus.
-    nsIWidget* widget = nsContentUtils::WidgetForContent(mOwnerContent);
-    if (!widget || static_cast<nsBaseWidget*>(widget)->IsSmallPopup()) {
-      return false;
-    }
+//     nsIWidget* widget = nsContentUtils::WidgetForContent(mOwnerContent);
+//     if (!widget || static_cast<nsBaseWidget*>(widget)->IsSmallPopup()) {
+//       return false;
+//     }
 
     if (BrowserHost* bh = mRemoteBrowser->AsBrowserHost()) {
       RefPtr<BrowsingContext> bc = bh->GetBrowsingContext()->Top();
