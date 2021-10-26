@@ -29,7 +29,15 @@ var gMoreFromMozillaPane = {
     if (this.initialized) {
       return;
     }
+
     this.initialized = true;
+
+    const { require } = ChromeUtils.import(
+      "resource://devtools/shared/Loader.jsm",
+      {}
+    );
+    const QR = require("devtools/shared/qrcode/index");
+
     document
       .getElementById("moreFromMozillaCategory")
       .removeAttribute("data-hidden-from-search");
@@ -49,5 +57,11 @@ var gMoreFromMozillaPane = {
       .addEventListener("click", function() {
         gMoreFromMozillaPane.openURL("https://rally.mozilla.org/");
       });
+
+    const uri = "https://www.mozilla.org/en-US/firefox/browsers/mobile";
+    const imgData = QR.encodeToDataURI(uri, "L");
+    document.getElementById(
+      "qrContainer"
+    ).style.backgroundImage = `url("${imgData.src}")`;
   },
 };

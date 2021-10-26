@@ -13,15 +13,21 @@
     <html:h1 class="title" data-l10n-id="pane-more-from-mozilla-title" />
     <html:p class="subtitle" data-l10n-id="pane-more-from-mozilla-subtitle" />
     <!-- Mozilla Products -->
-    <vbox class="list-item">
-      <label>
-        <html:h2 id="firefox-mobile" class="product-title" data-l10n-id="firefox-mobile-title" />
-      </label>
-      <html:p class="description" data-l10n-id="firefox-mobile-description" />
+    <hbox>
+      <vbox class="list-item">
+        <label>
+          <html:h2 id="firefox-mobile" class="product-title" data-l10n-id="firefox-mobile-title" />
+        </label>
+        <html:p class="description" data-l10n-id="firefox-mobile-description" />
+        <hbox>
+          <button id="fxMobile" class="primary small-button" data-l10n-id="button-firefox-mobile" />
+        </hbox>
+      </vbox>
       <hbox>
-        <button id="fxMobile" class="primary small-button" data-l10n-id="button-firefox-mobile" />
+        <box id="qrContainer"></box>
       </hbox>
-    </vbox>
+    </hbox>
+
     <vbox class="list-item">
       <label>
         <html:h2 id="mozilla-vpn" class="product-title" data-l10n-id="mozilla-vpn-title" />
