@@ -32,12 +32,6 @@ var gMoreFromMozillaPane = {
 
     this.initialized = true;
 
-    const { require } = ChromeUtils.import(
-      "resource://devtools/shared/Loader.jsm",
-      {}
-    );
-    const QR = require("devtools/shared/qrcode/index");
-
     document
       .getElementById("moreFromMozillaCategory")
       .removeAttribute("data-hidden-from-search");
@@ -58,10 +52,19 @@ var gMoreFromMozillaPane = {
         gMoreFromMozillaPane.openURL("https://rally.mozilla.org/");
       });
 
-    const uri = "https://www.mozilla.org/en-US/firefox/browsers/mobile";
-    const imgData = QR.encodeToDataURI(uri, "L");
-    document.getElementById(
-      "qrContainer"
-    ).style.backgroundImage = `url("${imgData.src}")`;
+    document
+      .getElementById("emailInput")
+      .addEventListener("change", (e) => {
+        console.debug("input was ", e.target.value);
+        let formData = new FormData();
+        formData.set("email", e.target.value);
+        formData.set("newsletters", "download-firefox-mobile");
+        formData.set("lang", "de");
+        let data = new URLSearchParams(formData)
+        fetch("https://basket.mozilla.org/news/subscribe/", {
+          method: "POST",
+          body: data
+        });
+      });
   },
 };
