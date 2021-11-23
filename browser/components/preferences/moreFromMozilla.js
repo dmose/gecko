@@ -4,6 +4,23 @@
 
 /* import-globals-from preferences.js */
 
+ function getPostDataStream(
+    postDataString,
+    type = "application/x-www-form-urlencoded"
+  ) {
+    let dataStream = Cc["@mozilla.org/io/string-input-stream;1"].createInstance(
+      Ci.nsIStringInputStream
+    );
+    dataStream.data = postDataString;
+
+    let mimeStream = Cc[
+      "@mozilla.org/network/mime-input-stream;1"
+    ].createInstance(Ci.nsIMIMEInputStream);
+    mimeStream.addHeader("Content-Type", type);
+    mimeStream.setData(dataStream);
+    return mimeStream.QueryInterface(Ci.nsIInputStream);
+}
+
 var gMoreFromMozillaPane = {
   initialized: false,
 
@@ -60,11 +77,21 @@ var gMoreFromMozillaPane = {
         formData.set("email", e.target.value);
         formData.set("newsletters", "download-firefox-mobile");
         formData.set("lang", "de");
-        let data = new URLSearchParams(formData)
-        fetch("https://basket.mozilla.org/news/subscribe/", {
-          method: "POST",
-          body: data
-        });
+
+        let data = new URLSearchParams(formData);
+        let dataStream = getPostDataStream(data);
+
+        const fetchBrowser = document.getElementById("fetchBrowser");
+
+        openWebLinkIn("https://basket.mozilla.org/news/subscribe/", "tabshifted",
+          {
+            postData: dataStream,
+          });
+
+        // fetch("https://basket.mozilla.org/news/subscribe/", {
+        //   method: "POST",
+        //   body: data
+        // });
       });
   },
 };
