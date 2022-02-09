@@ -517,20 +517,27 @@ add_task(async function test_experiment_messaging_system() {
     targeting: "true",
   });
 
+  info("about to wait for normandy event");
   await waitForTelemetryEvent("normandy");
+  info("about to start clearing");
   await TestUtils.waitForCondition(() => {
     Services.telemetry.clearEvents();
     let events = Services.telemetry.snapshotEvents(
       Ci.nsITelemetry.DATASET_PRERELEASE_CHANNELS,
       true
     ).content;
+    info("waiting for clearing, but");
+    info(JSON.stringify(events));
     return !events || !events.length;
   }, "Waiting for telemetry events to get cleared");
+  info("about to call snapshotEvents");
   Services.telemetry.snapshotEvents(
     Ci.nsITelemetry.DATASET_PRERELEASE_CHANNELS,
     true
   );
+  info("clearing call to snapshotEvents has returned");
   Services.telemetry.clearEvents();
+  info("calls to clearEvents have completed");
 
   let { win, tab } = await openTabAndWaitForRender();
 
