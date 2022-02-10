@@ -56,7 +56,7 @@ class AboutPrivateBrowsingChild extends RemotePageChild {
   PrivateBrowsingFeatureConfig() {
     const config = NimbusFeatures.privatebrowsing.getAllVariables() || {};
 
-    NimbusFeatures.privatebrowsing.recordExposureEvent();
+    // NimbusFeatures.privatebrowsing.recordExposureEvent();
 
     // Format urls if any are defined
     ["infoLinkUrl", "promoLinkUrl"].forEach(key => {
