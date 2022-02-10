@@ -18,6 +18,16 @@ const { ASRouter } = ChromeUtils.import(
   "resource://activity-stream/lib/ASRouter.jsm"
 );
 
+add_task(async function setup() {
+  await SpecialPowers.pushPrefEnv({
+    set: [
+      // Since we're counting telemetry events; let's keep things
+      // deterministic.
+      ["browser.newtab.preload", false],
+    ],
+  });
+});
+
 /**
  * These tests ensure that the experiment and remote default capabilities
  * for the "privatebrowsing" feature are working as expected.
