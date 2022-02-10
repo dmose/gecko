@@ -23,6 +23,31 @@ const { ASRouter } = ChromeUtils.import(
  * for the "privatebrowsing" feature are working as expected.
  */
 
+async function waitForEventsToClear() {
+  info("entering waitForEventsToClear");
+  await TestUtils.waitForCondition(() => {
+    Services.telemetry.clearEvents();
+    let events = Services.telemetry.snapshotEvents(
+      Ci.nsITelemetry.DATASET_PRERELEASE_CHANNELS,
+      true
+    ).content;
+    info("waiting for clearing, current event snapshot: ");
+    info(JSON.stringify(events));
+    return !events || !events.length;
+  }, "Waiting for telemetry events to get cleared");
+
+  info("about to call snapshotEvents");
+  Services.telemetry.snapshotEvents(
+    Ci.nsITelemetry.DATASET_PRERELEASE_CHANNELS,
+    true
+  );
+  info("clearing call to snapshotEvents has returned");
+
+  info("final call to clearEvents");
+  Services.telemetry.clearEvents();
+  info("calls to clearEvents have completed");
+}
+
 async function openTabAndWaitForRender() {
   let { win, tab } = await openAboutPrivateBrowsing();
   await SpecialPowers.spawn(tab, [], async function() {
@@ -147,6 +172,7 @@ add_task(async function test_experiment_plain_text() {
 
   await BrowserTestUtils.closeWindow(win);
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });
 
 add_task(async function test_experiment_fluent() {
@@ -186,6 +212,7 @@ add_task(async function test_experiment_fluent() {
 
   await BrowserTestUtils.closeWindow(win);
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });
 
 add_task(async function test_experiment_info_disabled() {
@@ -209,6 +236,7 @@ add_task(async function test_experiment_info_disabled() {
 
   await BrowserTestUtils.closeWindow(win);
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });
 
 add_task(async function test_experiment_promo_disabled() {
@@ -232,6 +260,7 @@ add_task(async function test_experiment_promo_disabled() {
 
   await BrowserTestUtils.closeWindow(win);
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });
 
 add_task(async function test_experiment_format_urls() {
@@ -264,6 +293,7 @@ add_task(async function test_experiment_format_urls() {
 
   await BrowserTestUtils.closeWindow(win);
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });
 
 add_task(async function test_experiment_click_info_telemetry() {
@@ -278,7 +308,7 @@ add_task(async function test_experiment_click_info_telemetry() {
 
   let { win, tab } = await openTabAndWaitForRender();
 
-  Services.telemetry.clearEvents();
+  await waitForEventsToClear();
 
   await SpecialPowers.spawn(tab, [], () => {
     const el = content.document.querySelector(".info a");
@@ -294,6 +324,7 @@ add_task(async function test_experiment_click_info_telemetry() {
 
   await BrowserTestUtils.closeWindow(win);
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });
 
 add_task(async function test_experiment_click_promo_telemetry() {
@@ -324,6 +355,7 @@ add_task(async function test_experiment_click_promo_telemetry() {
 
   await BrowserTestUtils.closeWindow(win);
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });
 
 add_task(async function test_experiment_bottom_promo() {
@@ -381,6 +413,7 @@ add_task(async function test_experiment_bottom_promo() {
   await BrowserTestUtils.closeWindow(win);
 
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });
 
 add_task(async function test_experiment_below_search_promo() {
@@ -440,6 +473,7 @@ add_task(async function test_experiment_below_search_promo() {
   await BrowserTestUtils.closeWindow(win);
 
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });
 
 add_task(async function test_experiment_top_promo() {
@@ -496,4 +530,5 @@ add_task(async function test_experiment_top_promo() {
   await BrowserTestUtils.closeWindow(win);
 
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });

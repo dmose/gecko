@@ -18,6 +18,31 @@ const { ASRouter } = ChromeUtils.import(
   "resource://activity-stream/lib/ASRouter.jsm"
 );
 
+async function waitForEventsToClear() {
+  info("entering waitForEventsToClear");
+  await TestUtils.waitForCondition(() => {
+    Services.telemetry.clearEvents();
+    let events = Services.telemetry.snapshotEvents(
+      Ci.nsITelemetry.DATASET_PRERELEASE_CHANNELS,
+      true
+    ).content;
+    info("waiting for clearing, current event snapshot: ");
+    info(JSON.stringify(events));
+    return !events || !events.length;
+  }, "Waiting for telemetry events to get cleared");
+
+  info("about to call snapshotEvents");
+  Services.telemetry.snapshotEvents(
+    Ci.nsITelemetry.DATASET_PRERELEASE_CHANNELS,
+    true
+  );
+  info("clearing call to snapshotEvents has returned");
+
+  info("final call to clearEvents");
+  Services.telemetry.clearEvents();
+  info("calls to clearEvents have completed");
+}
+
 add_task(async function setup() {
   await SpecialPowers.pushPrefEnv({
     set: [
@@ -130,25 +155,7 @@ add_task(async function test_experiment_messaging_system() {
   // let normandyEvent = await waitForTelemetryEvent("normandy");
   // info("normandy event received");
   // info(JSON.stringify(normandyEvent));
-  info("about to start clearing");
-  await TestUtils.waitForCondition(() => {
-    Services.telemetry.clearEvents();
-    let events = Services.telemetry.snapshotEvents(
-      Ci.nsITelemetry.DATASET_PRERELEASE_CHANNELS,
-      true
-    ).content;
-    info("waiting for clearing, but");
-    info(JSON.stringify(events));
-    return !events || !events.length;
-  }, "Waiting for telemetry events to get cleared");
-  info("about to call snapshotEvents");
-  Services.telemetry.snapshotEvents(
-    Ci.nsITelemetry.DATASET_PRERELEASE_CHANNELS,
-    true
-  );
-  info("clearing call to snapshotEvents has returned");
-  Services.telemetry.clearEvents();
-  info("calls to clearEvents have completed");
+  await waitForEventsToClear();
 
   let { win, tab } = await openTabAndWaitForRender();
 
@@ -195,10 +202,9 @@ add_task(async function test_experiment_messaging_system() {
     { process: "content" }
   );
 
-  Services.telemetry.clearEvents();
-
   await BrowserTestUtils.closeWindow(win);
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });
 
 add_task(async function test_experiment_messaging_system_impressions() {
@@ -223,7 +229,7 @@ add_task(async function test_experiment_messaging_system_impressions() {
     targeting: "true",
   });
 
-  Services.telemetry.clearEvents();
+  await waitForEventsToClear();
 
   let { win: win1, tab: tab1 } = await openTabAndWaitForRender();
 
@@ -291,6 +297,7 @@ add_task(async function test_experiment_messaging_system_impressions() {
   await BrowserTestUtils.closeWindow(win2);
   await BrowserTestUtils.closeWindow(win3);
   await doExperimentCleanup();
+  await waitForEventsToClear();
 });
 
 // Temporarily disabled for intermittent failure issues, even though the functionality
