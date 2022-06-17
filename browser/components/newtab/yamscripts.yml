@@ -10,6 +10,8 @@ scripts:
     css: sass content-src/styles:css --no-source-map
     welcomeBundle: webpack-cli --config webpack.aboutwelcome.config.js
     welcomeCss: sass content-src/aboutwelcome:aboutwelcome/content --no-source-map
+    devtoolsBundle: webpack-cli --config webpack.devtools.config.js
+   # devtoolsCss: sass content-src/aboutwelcome:aboutwelcome/content --no-source-map
     html: rimraf prerendered && node ./bin/render-activity-stream-html.js
 
   # buildmc: Used to do stuff when this code was in GitHub, now just an

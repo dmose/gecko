@@ -86,6 +86,7 @@
     "bundle:css": "sass content-src/styles:css --no-source-map",
     "bundle:welcomeBundle": "webpack-cli --config webpack.aboutwelcome.config.js",
     "bundle:welcomeCss": "sass content-src/aboutwelcome:aboutwelcome/content --no-source-map",
+    "bundle:devtoolsBundle": "webpack-cli --config webpack.devtools.config.js",
     "bundle:html": "rimraf prerendered && node ./bin/render-activity-stream-html.js",
     "buildmc": "npm-run-all buildmc:*",
     "buildmc:bundle": "npm run  bundle",
