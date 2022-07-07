@@ -29,7 +29,7 @@ ChromeUtils.defineModuleGetter(
 var EXPORTED_SYMBOLS = ["FilterExpressions"];
 
 XPCOMUtils.defineLazyGetter(lazy, "jexl", () => {
-  const jexl = new lazy.mozjexl.Jexl();
+  const jexl = new lazy.mozjexl.Jexl(FilterExpressions.throwOnMissingProp);
   jexl.addTransforms({
     date: dateString => new Date(dateString),
     stableSample: lazy.Sampling.stableSample,
@@ -47,7 +47,10 @@ XPCOMUtils.defineLazyGetter(lazy, "jexl", () => {
   return jexl;
 });
 
+// XXX how many instances of this are there?  how many instances of targeting.jsm?
 var FilterExpressions = {
+  throwOnMissingProp: false,
+
   getAvailableTransforms() {
     return Object.keys(lazy.jexl._transforms);
   },
