@@ -10,7 +10,8 @@ const PATHS = {
   testEntryFile: path.resolve(__dirname, "test/unit/unit-entry.js"),
 
   // A glob-style pattern matching all unit tests
-  testFilesPattern: "test/unit/**/*.js",
+  //testFilesPattern: "test/{unit,integration}/**/*.js",
+  testFilesPattern: "test/{unit,integration}/**/*.js",
 
   // The base directory of all source files (used for path resolution in webpack importing)
   moduleResolveDirectory: __dirname,
