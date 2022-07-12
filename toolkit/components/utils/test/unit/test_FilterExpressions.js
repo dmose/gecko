@@ -29,6 +29,17 @@ add_task(async function() {
   equal(val, 6, "context is available to filter expressions");
 });
 
+add_task(async function testEvalMismatchThrowsInAutomation() {
+  //FilterExpressions._currentJexl = { eval: async () => 3 };
+  //FilterExpressions._newJexl = { eval: async () => 3 };
+
+  await Assert.rejects(
+    FilterExpressions.eval("someNum", { someNum: 4 }),
+    /mismatch/,
+    "different results from the current and new JEXL interpreters throw in tests"
+  );
+});
+
 // Date tests
 add_task(async function() {
   let val;

@@ -28,8 +28,7 @@ ChromeUtils.defineModuleGetter(
 
 var EXPORTED_SYMBOLS = ["FilterExpressions"];
 
-XPCOMUtils.defineLazyGetter(lazy, "jexl", () => {
-  const jexl = new lazy.mozjexl.Jexl();
+function initJexlInterpreter(jexl) {
   jexl.addTransforms({
     date: dateString => new Date(dateString),
     stableSample: lazy.Sampling.stableSample,
@@ -44,18 +43,91 @@ XPCOMUtils.defineLazyGetter(lazy, "jexl", () => {
     versionCompare,
   });
   jexl.addBinaryOp("intersect", 40, operatorIntersect);
+}
+
+XPCOMUtils.defineLazyGetter(lazy, "jexl", () => {
+  const jexl = new lazy.mozjexl.Jexl();
+  initJexlInterpreter(jexl);
+  return jexl;
+});
+
+XPCOMUtils.defineLazyGetter(lazy, "newJexl", () => {
+  const jexl = new lazy.mozjexl.Jexl();
+  initJexlInterpreter(jexl);
   return jexl;
 });
 
 var FilterExpressions = {
   getAvailableTransforms() {
+    if (!this._currentJexl) {
+      this._currentJexl = lazy.jexl;
+    }
+
     return Object.keys(lazy.jexl._transforms);
   },
 
-  eval(expr, context = {}) {
+  // eval(expr, context = {}) {
+  //   if (!this._currentJexl) {
+  //     this._currentJexl = lazy.jexl;
+  //   }
+
+  //   const onelineExpr = expr.replace(/[\t\n\r]/g, " ");
+  //   return lazy.jexl.eval(onelineExpr, context);
+  // },
+
+  /**
+   * Like eval, but evaluates with both a new and old
+   *
+   * @param expr
+   * @param context
+   * @returns
+   */
+  async eval(expr, context = {}) {
+    if (!this._currentJexl) {
+      this._currentJexl = lazy.jexl;
+    }
+
+    if (!this._newJexl) {
+      this._newJexl = lazy.newJexl;
+    }
+
     const onelineExpr = expr.replace(/[\t\n\r]/g, " ");
-    return lazy.jexl.eval(onelineExpr, context);
+
+    let currentRejectionReason = null;
+    let newRejectionReason = null;
+
+    // XXX should use Promise.allSettled to avoid introducing an extra lag
+    const currentResult = await this._currentJexl
+      .eval(onelineExpr, context)
+      .catch(reason => {
+        currentRejectionReason = reason;
+      });
+    const newResult = await this._newJexl.eval(onelineExpr).catch(reason => {
+      newRejectionReason = reason;
+    });
+
+    console.log("current: ", currentResult);
+    console.log("new: ", newResult);
+
+    // XXX between the next two versions, the rejections due to a missing prop
+    // will be expected.  Do we just want to ignore these and not send telemetry?
+    if (
+      currentResult != newResult ||
+      currentRejectionReason != newRejectionReason
+    ) {
+      // XXX send telemetry.  How does this telemetry relate to the telemetry
+      // sent by the TargetingContext proxy object?  Can we somehow get that to do the work?
+    }
+
+    if (currentRejectionReason) {
+      throw currentRejectionReason;
+    }
+
+    return currentResult;
   },
+
+  currentJexl: undefined,
+  newJexl: undefined,
 };
 
 /**
