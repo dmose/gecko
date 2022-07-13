@@ -28,8 +28,7 @@ ChromeUtils.defineModuleGetter(
 
 var EXPORTED_SYMBOLS = ["FilterExpressions"];
 
-XPCOMUtils.defineLazyGetter(lazy, "jexl", () => {
-  const jexl = new lazy.mozjexl.Jexl(FilterExpressions.throwOnMissingProp);
+function initJexlInterpreter(jexl) {
   jexl.addTransforms({
     date: dateString => new Date(dateString),
     stableSample: lazy.Sampling.stableSample,
@@ -44,20 +43,63 @@ XPCOMUtils.defineLazyGetter(lazy, "jexl", () => {
     versionCompare,
   });
   jexl.addBinaryOp("intersect", 40, operatorIntersect);
+}
+
+XPCOMUtils.defineLazyGetter(lazy, "jexl", () => {
+  const jexl = new lazy.mozjexl.Jexl();
+  initJexlInterpreter(jexl);
   return jexl;
 });
 
-// XXX how many instances of this are there?  how many instances of targeting.jsm?
+/**
+ * As of this writing, the new jexl interpreter has been built from mozilla/mozjexl on
+ * and is _believed_ to behave identically to the one currently in mozilla-central,
+ * _UNLESS_ it is passed an options object containing `throwOnMissingProp: true`,
+ * in which case it will behave as described.
+ *
+ * For now, the intent is for this to _only_ be used in `evalThrowOnMissingProp` by
+ * tests as well as integration tests in the Experimenter product.  XXX JIRA ticket here
+ *
+ * In the future, we'd also like this interpreter to replace the current one
+ * (ie used by all methods in FilterExpressions), mostly so that we can fix bugs or make
+ * changes if we need to, which is not really true today.  Initially for eval and
+ * getTransforms, it would use the new code with the old behavior (i.e.
+ * `throwOnMissingProp: true`).  The next step to getting there is running all eval calls
+ * on both interpreters to convince ourselves that this won't regress things. XXXbug
+ *
+ * Making `evalThrowOnMissingProp` behavior the default for all callers so that these
+ * errors could be easily caught at runtime for both Nimbus and FxMS is an even later
+ * project than that.  XXXlink to JIRA ticket
+ */
+XPCOMUtils.defineLazyGetter(lazy, "newJexl", () => {
+  // XXX switch to mozjexlNew
+  const jexl = new lazy.mozjexl.Jexl({ throwOnMissingProp: true });
+  initJexlInterpreter(jexl);
+  return jexl;
+});
+
 var FilterExpressions = {
-  throwOnMissingProp: false,
+  jexl: null,
+  newJexl: null,
 
   getAvailableTransforms() {
-    return Object.keys(lazy.jexl._transforms);
+    return Object.keys(this.jexl._transforms);
+  },
+
+  evalThrowOnMissingProp(expr, context = {}) {
+    if (!this.newJexl) {
+      this.newJexl = lazy.newJexl;
+    }
+    const onelineExpr = expr.replace(/[\t\n\r]/g, " ");
+    return this.mozjexlNew.eval(onelineExpr, context);
   },
 
   eval(expr, context = {}) {
+    if (!this.jexl) {
+      this.jexl = lazy.jexl;
+    }
     const onelineExpr = expr.replace(/[\t\n\r]/g, " ");
-    return lazy.jexl.eval(onelineExpr, context);
+    return this.jexl.eval(onelineExpr, context);
   },
 };
 
