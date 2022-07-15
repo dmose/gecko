@@ -1851,6 +1851,8 @@
     "toolkit/components/utils/WindowsVersionInfo.jsm",
   "resource://gre/modules/components-utils/mozjexl.js":
     "toolkit/components/utils/mozjexl.js",
+  "resource://gre/modules/components-utils/newMozjexl.jsm":
+    "toolkit/components/utils/newMozjexl.jsm",
   "resource://gre/modules/crypto-SDR.js":
     "toolkit/components/passwordmgr/crypto-SDR.js",
   "resource://gre/modules/ctypes.jsm": "toolkit/components/ctypes/ctypes.jsm",
