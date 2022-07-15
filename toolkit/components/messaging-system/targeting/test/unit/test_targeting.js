@@ -335,6 +335,29 @@ add_task(async function test_targeting_source_override() {
   Services.telemetry.clearEvents();
 });
 
+// XXX also test that a property that doies exist returns the right thing with a similar test
+add_task(async function test_combined_experiment_context() {
+  const _experiment = { experiment: {} };
+
+  const context = TargetingContext.combineContexts(
+    { dog: true },
+    _experiment,
+    ExperimentManager.ExperimentManager.createTargetingContext(),
+    ASRouterTargeting.ASRouterTargeting.Environment
+  );
+  console.log("combined context in test: ", context);
+  const targetingContext = new TargetingContext(context, {
+    throwOnMissingProp: true,
+  });
+  console.log("targetingContext: ", targetingContext);
+
+  await Assert.rejects(
+    targetingContext.evalWithDefault("foo.monkey"),
+    /identifier/,
+    "evaluating non-existent property should reject"
+  );
+});
+
 add_task(async function test_combined_experiment_context() {
   const _experiment = { experiment: {} };
 
@@ -343,11 +366,21 @@ add_task(async function test_combined_experiment_context() {
     ExperimentManager.ExperimentManager.createTargetingContext(),
     ASRouterTargeting.ASRouterTargeting.Environment
   );
-  const targetingContext = new TargetingContext(context);
+  console.log("combined context in test: ", context);
+  const targetingContext = new TargetingContext(context, {
+    throwOnMissingProp: false,
+  });
+  console.log("targetingContext: ", targetingContext);
 
-  await Assert.rejects(
-    targetingContext.evalWithDefault("monkey"),
-    /identifier/,
-    "evaluating non-existent property should reject"
+  // XXX rejects because context is null; but so does existing mozjexl.js.  Do we need to fix?
+  console.log(
+    "evalWithDefault",
+    targetingContext.evalWithDefault("foo.monkey")
   );
+
+  // await Assert.rejects(
+  //   targetingContext.evalWithDefault("foo.monkey"),
+  //   /identifier/,
+  //   "evaluating non-existent property should reject"
+  // );
 });

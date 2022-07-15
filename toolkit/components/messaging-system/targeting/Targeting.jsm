@@ -216,6 +216,9 @@ class TargetingContext {
       {},
       {
         get(target, prop) {
+          console.log("in combineContexts get trap, prop: ", prop);
+          //console.log("contexts = ", contexts);
+          console.trace();
           for (let context of contexts) {
             if (prop in context) {
               return context[prop];
@@ -226,7 +229,6 @@ class TargetingContext {
         },
         has(target, prop) {
           console.log("in combineContexts has trap, prop: ", prop);
-          console.log("contexts: ", contexts);
           for (let context of contexts) {
             if (prop in context) {
               console.log("  returning true");
@@ -261,7 +263,14 @@ class TargetingContext {
     console.trace();
     console.log("expression: ", expression);
     console.log("contexts: ", contexts);
-    lazy.FilterExpressions.throwOnMissingProp = this._throwOnMissingProp; // XXX _
+
+    if (this._throwOnMissingProp) {
+      return lazy.FilterExpressions.evalThrowOnMissingProp(
+        expression,
+        this.mergeEvaluationContexts([{ ctx: this.ctx }, ...contexts])
+      ); //.catch(() => {});
+    }
+
     return lazy.FilterExpressions.eval(
       expression,
       this.mergeEvaluationContexts([{ ctx: this.ctx }, ...contexts])
@@ -284,6 +293,14 @@ class TargetingContext {
     console.trace();
     console.log("expression: ", expression);
     console.log("this.ctx: ", this.ctx);
+    if (this._throwOnMissingProp) {
+      console.log("in throw on missing");
+      return lazy.FilterExpressions.evalThrowOnMissingProp(
+        expression,
+        this.createContextWithTimeout(this.ctx)
+      ); //.catch(() => {});
+    }
+
     return lazy.FilterExpressions.eval(
       expression,
       this.createContextWithTimeout(this.ctx)
