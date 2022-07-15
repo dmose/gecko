@@ -26,6 +26,13 @@ ChromeUtils.defineModuleGetter(
   "resource://gre/modules/components-utils/mozjexl.js"
 );
 
+XPCOMUtils.defineLazyModuleGetter(
+  lazy,
+  "newMozjexl",
+  "resource://gre/modules/components-utils/newMozjexl.jsm",
+  "mozjexl"
+);
+
 var EXPORTED_SYMBOLS = ["FilterExpressions"];
 
 function initJexlInterpreter(jexl) {
@@ -72,8 +79,7 @@ XPCOMUtils.defineLazyGetter(lazy, "jexl", () => {
  * project than that.  XXXlink to JIRA ticket
  */
 XPCOMUtils.defineLazyGetter(lazy, "newJexl", () => {
-  // XXX switch to mozjexlNew
-  const jexl = new lazy.mozjexl.Jexl({ throwOnMissingProp: true });
+  const jexl = new lazy.newMozjexl.Jexl({ throwOnMissingProp: true });
   initJexlInterpreter(jexl);
   return jexl;
 });
@@ -83,6 +89,10 @@ var FilterExpressions = {
   newJexl: null,
 
   getAvailableTransforms() {
+    if (!this.jexl) {
+      this.jexl = lazy.jexl;
+    }
+
     return Object.keys(this.jexl._transforms);
   },
 
@@ -91,7 +101,7 @@ var FilterExpressions = {
       this.newJexl = lazy.newJexl;
     }
     const onelineExpr = expr.replace(/[\t\n\r]/g, " ");
-    return this.mozjexlNew.eval(onelineExpr, context);
+    return this.newJexl.eval(onelineExpr, context);
   },
 
   eval(expr, context = {}) {
