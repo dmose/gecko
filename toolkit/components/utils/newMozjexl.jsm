@@ -305,6 +305,7 @@ function Jexl(throwOnMissingProp) {
   this._lexer = null;
   this._transforms = {};
   this._throwOnMissingProp = throwOnMissingProp || true;
+	console.log("this._throwOnMissingProp: ", this._throwOnMissingProp);
 }
 
 /**
@@ -465,8 +466,10 @@ Jexl.prototype._eval = function(exp, context) {
       grammar,
       this._transforms,
       context,
+			null, // XXX  needs a test
       this._throwOnMissingProp
     );
+		console.log("Jexl.eval", this._throwOnMissingProp);
   return Promise.resolve().then(function() {
     parser.addTokens(self._getLexer().tokenize(exp));
     return evaluator.eval(parser.complete());
@@ -570,6 +573,8 @@ var Evaluator = function(
   this._context = context || {};
   this._relContext = relativeContext || this._context;
   this._throwOnMissingProp = throwOnMissingProp || false;
+	console.log("Evaluator this._throwOnMissingProp", this._throwOnMissingProp);
+	console.trace();
 };
 
 /**
@@ -579,7 +584,10 @@ var Evaluator = function(
  */
 Evaluator.prototype.eval = function(ast) {
   var self = this;
+	console.log("this._throwOnMissingProp", this._throwOnMissingProp);
+
   return Promise.resolve().then(function() {
+		console.log("self._throwOnMissingProp", self._throwOnMissingProp);
     return handlers[ast.type].call(self, ast);
   });
 };
@@ -649,7 +657,8 @@ Evaluator.prototype._filterRelative = function(subject, expr) {
       this._grammar,
       this._transforms,
       this._context,
-      elem
+      elem,
+			this._throwOnMissingProp
     );
     promises.push(evalInst.eval(expr));
   }, this);
@@ -787,16 +796,23 @@ exports.Identifier = function(ast) {
   }
 
   let that = this;
+	console.log("Identifier this._throwOnMissingProp", this._throwOnMissingProp);
   if (ast.from) {
     return this.eval(ast.from).then(function(context) {
-      if (Array.isArray(context)) context = context[0];
+      if (Array.isArray(context)) {
+				context = context[0];
+				console.log("Array dereference triggered");
+			}
+
       if (context === undefined) return undefined; // XXX deleteme?  testme?
+			console.log("newMozjexl: that._throwOnMissingProp: ", that._throwOnMissingProp)
       if (that._throwOnMissingProp && !contextHasProp(context, ast.value)) {
         throw new Error(
           `stemmed context does not have an identifier named ${ast.value}`
         );
       }
 
+			console.log("ast", ast);
       return context[ast.value];
     });
   } else {
