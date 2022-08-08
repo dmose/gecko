@@ -196,12 +196,14 @@ export function LanguageSwitcher(props) {
         <button
           className="primary"
           value="primary_button"
+          data-testid="preloading_primary_button"
           disabled={true}
           type="button"
         >
           <img
             className="language-loader"
             src="chrome://browser/skin/tabbrowser/tab-connecting.png"
+            data-testid="preloading_img"
             alt=""
           />
           <Localized text={content.languageSwitcher.waiting} />
@@ -224,10 +226,12 @@ export function LanguageSwitcher(props) {
           value="primary_button"
           disabled={true}
           type="button"
+          data-testid="waiting_primary_button"
         >
           <img
             className="language-loader"
             src="chrome://browser/skin/tabbrowser/tab-connecting.png"
+            data-testid="waiting_img"
             alt=""
           />
           <Localized
@@ -239,6 +243,7 @@ export function LanguageSwitcher(props) {
             <button
               type="button"
               className="secondary text-link"
+              data-testid="cancel_waiting"
               onClick={() => {
                 setIsAwaitingLangpack(false);
                 handleAction({
