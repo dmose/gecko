@@ -50,7 +50,7 @@ module.exports = function(config) {
       "sinon", // require("sinon") require("karma-sinon")
     ],
     reporters: [
-      "coverage-istanbul", // require("karma-coverage")
+      //"coverage-istanbul", // require("karma-coverage")
       "mocha", // require("karma-mocha-reporter")
 
       // for bin/try-runner.js to parse the output easily
