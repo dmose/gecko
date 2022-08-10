@@ -335,12 +335,36 @@ add_task(async function test_targeting_source_override() {
   Services.telemetry.clearEvents();
 });
 
+let params = [
+  {
+    expr: "os.nonExistentAttr == undefined",
+    throwsOnMissingProp: true,
+    result: "reject",
+  },
+  {
+    expr: "os.windowsBuildNumber == undefined",
+    throwsOnMissingProp: true,
+    result: true,
+  },
+  {
+    expr: "os.nonExistentAttr == undefined",
+    throwsOnMissingProp: false,
+    result: true,
+  },
+  {
+    expr: "os.windowsBuildNumber == undefined",
+    throwsOnMissingProp: false,
+    result: true,
+  },
+];
+
 // XXX also test that a property that doies exist returns the right thing with a similar test
-add_task(async function test_combined_experiment_context() {
+
+// XXX comment
+add_task(async function test_throws_on_combined_experiment_context_new() {
   const _experiment = { experiment: {} };
 
   const context = TargetingContext.combineContexts(
-    { dog: true },
     _experiment,
     ExperimentManager.ExperimentManager.createTargetingContext(),
     ASRouterTargeting.ASRouterTargeting.Environment
@@ -352,13 +376,14 @@ add_task(async function test_combined_experiment_context() {
   console.log("targetingContext: ", targetingContext);
 
   await Assert.rejects(
-    targetingContext.evalWithDefault("foo.monkey"),
+    targetingContext.evalWithDefault("os.nonExistentAttr == undefined"),
     /identifier/,
     "evaluating non-existent property should reject"
   );
 });
 
-add_task(async function test_combined_experiment_context() {
+// XXX comment
+add_task(async function test_combined_experiment_context_old() {
   const _experiment = { experiment: {} };
 
   const context = TargetingContext.combineContexts(
@@ -372,15 +397,13 @@ add_task(async function test_combined_experiment_context() {
   });
   console.log("targetingContext: ", targetingContext);
 
-  // XXX rejects because context is null; but so does existing mozjexl.js.  Do we need to fix?
   console.log(
-    "evalWithDefault",
-    targetingContext.evalWithDefault("foo.monkey")
+    "evals to ",
+    targetingContext.evalWithDefault("os.windowsBuildNumber == undefined")
   );
-
-  // await Assert.rejects(
-  //   targetingContext.evalWithDefault("foo.monkey"),
-  //   /identifier/,
-  //   "evaluating non-existent property should reject"
+  // await Assert.equal(
+  //   targetingContext.evalWithDefault("os.nonExistentAttr"),
+  //   undefined,
+  //   "evaluating non-existent prop with throwOnMissingProp == false should return {}"
   // );
 });
