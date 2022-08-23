@@ -74,6 +74,11 @@ excluded_from_imports_prefix = list(
             "services/fxaccounts/FxAccountsPairingChannel.js",
             "testing/talos/talos/tests/devtools/addon/content/pages/custom/debugger/static/js/main.js",  # noqa E501
             "testing/web-platform/",
+            "third_party/webkit/",
+            "toolkit/components/certviewer/content/vendor/",
+            "toolkit/components/normandy/vendor/",
+            "toolkit/components/utils/mozjexl.js",
+            "toolkit/components/utils/newMozjexl.js",
             # Unrelated testcases that has edge case syntax.
             "browser/components/sessionstore/test/unit/data/",
             "devtools/client/debugger/src/workers/parser/tests/fixtures/",

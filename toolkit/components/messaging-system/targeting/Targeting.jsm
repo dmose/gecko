@@ -71,8 +71,15 @@ const TargetingEnvironment = {
 class TargetingContext {
   #telemetrySource = null;
 
-  constructor(customContext, options = { source: null }) {
+  constructor(
+    customContext,
+    options = { throwOnMissingProp: false, source: null }
+  ) {
     if (customContext) {
+      console.trace();
+      console.log("TargetingContext created with a custom context");
+      console.log("TargetingEnvironment:", TargetingEnvironment);
+      console.log("customContext", customContext);
       this.ctx = new Proxy(customContext, {
         get: (customCtx, prop) => {
           if (prop in TargetingEnvironment) {
@@ -80,10 +87,22 @@ class TargetingContext {
           }
           return customCtx[prop];
         },
+        has: (customContext, prop) => {
+          console.log("in customContext has trap with prop:", prop);
+          if (prop in TargetingEnvironment) {
+            console.log("returning true");
+            return true;
+          }
+          return prop in customContext;
+        },
       });
     } else {
+      console.trace();
+      console.log("TargetingContext created without a customContext");
+      console.log("TargetingEnvironment:", TargetingEnvironment);
       this.ctx = TargetingEnvironment;
     }
+    this._throwOnMissingProp = options.throwOnMissingProp; // XXX use a field?
 
     // Used in telemetry to report where the targeting expression is coming from
     this.#telemetrySource = options.source;
@@ -133,6 +152,7 @@ class TargetingContext {
       Cu.reportError(`${event}: ${value}`);
     };
 
+    console.log("Proxy with timeout created");
     return new Proxy(context, {
       get(target, prop) {
         // eslint-disable-next-line no-async-promise-executor
@@ -157,7 +177,12 @@ class TargetingContext {
           } finally {
             lazy.clearTimeout(timeout);
           }
-        });
+        }); // XXX do we need a has here too?
+      },
+      has(target, prop) {
+        console.log("createContextWithTimeout has trap, prop: ", prop);
+
+        return key ? prop in target[key] : prop in target;
       },
     });
   }
@@ -191,6 +216,9 @@ class TargetingContext {
       {},
       {
         get(target, prop) {
+          console.log("in combineContexts get trap, prop: ", prop);
+          //console.log("contexts = ", contexts);
+          console.trace();
           for (let context of contexts) {
             if (prop in context) {
               return context[prop];
@@ -198,6 +226,18 @@ class TargetingContext {
           }
 
           return null;
+        },
+        has(target, prop) {
+          console.log("in combineContexts has trap, prop: ", prop);
+          for (let context of contexts) {
+            if (prop in context) {
+              console.log("  returning true");
+              return true;
+            }
+          }
+
+          console.log("   returning false");
+          return false;
         },
       }
     );
@@ -220,10 +260,21 @@ class TargetingContext {
    * @returns {promise} Evaluation result
    */
   eval(expression, ...contexts) {
+    console.trace();
+    console.log("expression: ", expression);
+    console.log("contexts: ", contexts);
+
+    if (this._throwOnMissingProp) {
+      return lazy.FilterExpressions.evalThrowOnMissingProp(
+        expression,
+        this.mergeEvaluationContexts([{ ctx: this.ctx }, ...contexts])
+      ); //.catch(() => {});
+    }
+
     return lazy.FilterExpressions.eval(
       expression,
       this.mergeEvaluationContexts([{ ctx: this.ctx }, ...contexts])
-    );
+    ); //.catch(() => {});
   }
 
   /**
@@ -239,9 +290,20 @@ class TargetingContext {
    * @returns {promise} Evaluation result
    */
   evalWithDefault(expression) {
+    console.trace();
+    console.log("expression: ", expression);
+    console.log("this.ctx: ", this.ctx);
+    if (this._throwOnMissingProp) {
+      console.log("in throw on missing");
+      return lazy.FilterExpressions.evalThrowOnMissingProp(
+        expression,
+        this.createContextWithTimeout(this.ctx)
+      ); //.catch(() => {});
+    }
+
     return lazy.FilterExpressions.eval(
       expression,
       this.createContextWithTimeout(this.ctx)
-    );
+    ); //.catch(() => {});
   }
 }
