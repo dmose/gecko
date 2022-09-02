@@ -26,6 +26,8 @@ add_task(async function not_major_upgrade() {
 });
 
 add_task(async function remote_disabled() {
+  Services.telemetry.clearEvents();
+
   await ExperimentAPI.ready();
   let doCleanup = await ExperimentFakes.enrollWithRollout({
     featureId: NimbusFeatures.upgradeDialog.featureId,

@@ -53,6 +53,7 @@ add_setup(async () => {
  *    opened
  */
 async function openMRUpgradeWelcome(screensToTest) {
+  Cu.reportError("in openMRUpgrade");
   const data = await OnboardingMessageProvider.getUpgradeMessage();
 
   if (screensToTest) {
@@ -63,16 +64,19 @@ async function openMRUpgradeWelcome(screensToTest) {
 
   sandbox.stub(OnboardingMessageProvider, "getUpgradeMessage").resolves(data);
 
+  Cu.reportError("about to call promiseAlertDialogOpen");
   let dialogOpenPromise = BrowserTestUtils.promiseAlertDialogOpen(
     null,
     "chrome://browser/content/spotlight.html",
     { isSubDialog: true }
   );
 
+  Cu.reportError("about to call _showUpgradeDialog");
   Cc["@mozilla.org/browser/browserglue;1"]
     .getService()
     .wrappedJSObject._showUpgradeDialog();
 
+  Cu.reportError("about to await dialogOpenPromise");
   let browser = await dialogOpenPromise;
 
   OnboardingMessageProvider.getUpgradeMessage.restore();
@@ -80,6 +84,7 @@ async function openMRUpgradeWelcome(screensToTest) {
 }
 
 async function clickVisibleButton(browser, selector) {
+  Cu.reportError("in clickVisibleButton");
   await BrowserTestUtils.waitForCondition(
     () => browser.document.querySelector(selector),
     `waiting for selector ${selector}`,
@@ -94,6 +99,7 @@ async function test_upgrade_screen_content(
   expected = [],
   unexpected = []
 ) {
+  Cu.reportError("in test_upgrade_screen_content");
   for (let selector of expected) {
     await TestUtils.waitForCondition(
       () => browser.document.querySelector(selector),
@@ -109,6 +115,7 @@ async function test_upgrade_screen_content(
 }
 
 async function waitForDialogClose(browser) {
+  Cu.reportError("in waitForDialogClose");
   await BrowserTestUtils.waitForCondition(
     () => !browser.top?.document.querySelector(".dialogFrame"),
     "waiting for dialog to close"
@@ -119,6 +126,7 @@ async function waitForDialogClose(browser) {
  * Test homepage/newtab prefs start off as defaults and do not change
  */
 add_task(async function test_aboutwelcome_upgrade_mr_prefs_off() {
+  Cu.reportError("about to call openMRUpgradeWelcome");
   let browser = await openMRUpgradeWelcome([
     "UPGRADE_GET_STARTED",
     "UPGRADE_COLORWAY",
@@ -143,6 +151,9 @@ add_task(async function test_aboutwelcome_upgrade_mr_prefs_off() {
   );
 
   await clickVisibleButton(browser, ".action-buttons button.primary");
+
+  Cu.reportError("about to wait for dialog close");
+
   await waitForDialogClose(browser);
 
   Assert.ok(
@@ -154,6 +165,7 @@ add_task(async function test_aboutwelcome_upgrade_mr_prefs_off() {
     "newtab pref should be default"
   );
 
+  Cu.reportError("about to wait for tab removal");
   await BrowserTestUtils.removeTab(gBrowser.selectedTab);
 });
 
