@@ -71,6 +71,7 @@ const Spotlight = {
     const unload = await lazy.RemoteImages.patchMessage(message.content.logo);
 
     if (message.content?.modal === "tab") {
+      //debugger;
       let { closedPromise } = win.gBrowser.getTabDialogBox(browser).open(
         spotlight_url,
         {

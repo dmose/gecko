@@ -492,6 +492,7 @@ class _Interactions {
   observe(subject, topic, data) {
     switch (topic) {
       case DOMWINDOW_OPENED_TOPIC:
+        console.log("places observe, subject = ", subject);
         this.#onWindowOpen(subject);
         break;
       case "places-snapshots-added":

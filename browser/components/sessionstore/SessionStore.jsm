@@ -1508,6 +1508,7 @@ var SessionStoreInternal = {
     let target = aEvent.originalTarget;
     switch (aEvent.type) {
       case "TabOpen":
+        console.log("in ssi_handleEvent TabOpen , aEvent = ", aEvent);
         this.onTabAdd(win);
         break;
       case "TabBrowserInserted":

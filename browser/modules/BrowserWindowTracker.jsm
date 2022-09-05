@@ -66,6 +66,7 @@ function _updateCurrentBrowsingContextID(browser) {
 function _handleEvent(event) {
   switch (event.type) {
     case "TabBrowserInserted":
+      console.log("BWT: TabBrowserInserted"); // : event = ", event);
       if (
         event.target.ownerGlobal.gBrowser.selectedBrowser ===
         event.target.linkedBrowser
@@ -74,6 +75,7 @@ function _handleEvent(event) {
       }
       break;
     case "TabSelect":
+      console.log("BWT: TabSelect received"); //, event = ", event);
       _updateCurrentBrowsingContextID(event.target.linkedBrowser);
       break;
     case "activate":
@@ -136,6 +138,7 @@ var WindowHelper = {
   },
 
   onActivate(window) {
+    console.log("BWT activate event"); // , window = ", window);
     // If this window was the last focused window, we don't need to do anything
     if (window == _trackedWindows[0]) {
       return;

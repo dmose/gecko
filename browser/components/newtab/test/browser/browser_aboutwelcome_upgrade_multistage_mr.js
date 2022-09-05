@@ -120,6 +120,7 @@ async function waitForDialogClose(browser) {
     () => !browser.top?.document.querySelector(".dialogFrame"),
     "waiting for dialog to close"
   );
+  Cu.reportError('about to exit waitForDialogClose');
 }
 
 /**

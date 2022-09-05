@@ -4295,8 +4295,12 @@ BrowserGlue.prototype = {
     // XXX is there any possibility this could race with session restore and
     // the listener could be called for a different tab?
     await new Promise(resolve => {
-      gBrowser.addEventListener("TabSwitchDone", resolve, { once: true });
+      console.log("called AddEventListener inside promise");
+      gBrowser.addEventListener("TabSwitchDone", resolve, {
+        once: true,
+      });
 
+      console.log("call addTrustedTab inside promise");
       // Nice to have -- if the already-selected tab matches isBlankPageUrl(),
       // don't bother opening a new tab to do this.
       newTrustedTab = gBrowser.addTrustedTab("about:home", {
