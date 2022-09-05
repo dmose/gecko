@@ -4295,8 +4295,23 @@ BrowserGlue.prototype = {
     // XXX is there any possibility this could race with session restore and
     // the listener could be called for a different tab?
     await new Promise(resolve => {
+      function domListener(ev) {
+        console.log("in domListener callback, ev = ", ev);
+
+        // ev.target.linkedBrowser.addEventListener(z
+        //   "load",
+        //   e => {
+        //     debugger;
+        //     console.log("in load event listener, e = ", e);
+        //   },
+        //   { wantsUntrusted: true }
+        // );
+
+        console.log("resolving Promise");
+        resolve();
+      }
       console.log("called AddEventListener inside promise");
-      gBrowser.addEventListener("TabSwitchDone", resolve, {
+      gBrowser.addEventListener("TabSwitchDone", domListener, {
         once: true,
       });
 
