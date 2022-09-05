@@ -4288,19 +4288,22 @@ BrowserGlue.prototype = {
     const data = await lazy.OnboardingMessageProvider.getUpgradeMessage();
     const { gBrowser } = lazy.BrowserWindowTracker.getTopWindow();
 
-    // Nice to have -- if the already-selected tab matches isBlankPageUrl(),
-    // don't bother opening a new tab to do this.
-    const tab = gBrowser.addTrustedTab("about:home", {
-      relatedToCurrent: true,
-    });
-
     // Select a tab, and wait for it to be selected.
     //
+    let newTrustedTab;
+
     // XXX is there any possibility this could race with session restore and
     // the listener could be called for a different tab?
     await new Promise(resolve => {
       gBrowser.addEventListener("TabSwitchDone", resolve, { once: true });
-      gBrowser.selectedTab = tab;
+
+      // Nice to have -- if the already-selected tab matches isBlankPageUrl(),
+      // don't bother opening a new tab to do this.
+      newTrustedTab = gBrowser.addTrustedTab("about:home", {
+        relatedToCurrent: true,
+      });
+
+      gBrowser.selectedTab = newTrustedTab;
     });
 
     // Now that the tab is ready, show the upgrade dialog in it
@@ -4308,7 +4311,10 @@ BrowserGlue.prototype = {
       type: "SHOW_SPOTLIGHT",
       data,
     };
-    lazy.SpecialMessageActions.handleAction(config, tab.linkedBrowser);
+    lazy.SpecialMessageActions.handleAction(
+      config,
+      newTrustedTab.linkedBrowser
+    );
   },
 
   async _maybeShowDefaultBrowserPrompt() {
