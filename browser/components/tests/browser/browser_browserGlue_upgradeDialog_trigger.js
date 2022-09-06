@@ -54,6 +54,7 @@ add_task(async function remote_disabled() {
 });
 
 add_task(async function enterprise_disabled() {
+  Services.telemetry.clearEvents();
   const defaultPrefs = Services.prefs.getDefaultBranch("");
   const pref = "browser.aboutwelcome.enabled";
   const orig = defaultPrefs.getBoolPref(pref, true);
@@ -70,6 +71,7 @@ add_task(async function enterprise_disabled() {
 });
 
 add_task(async function show_major_upgrade() {
+  Services.telemetry.clearEvents();
   const defaultPrefs = Services.prefs.getDefaultBranch("");
   const pref = "browser.startup.upgradeDialog.enabled";
   const orig = defaultPrefs.getBoolPref(pref, true);
@@ -92,6 +94,7 @@ add_task(async function show_major_upgrade() {
 });
 
 add_task(async function dont_reshow() {
+  Services.telemetry.clearEvents();
   await BROWSER_GLUE._maybeShowDefaultBrowserPrompt();
 
   AssertEvents("Shouldn't reshow for upgrade dialog requirements", [
