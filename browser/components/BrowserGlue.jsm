@@ -4310,6 +4310,7 @@ BrowserGlue.prototype = {
 
     // Nice to have -- if the already-selected tab matches isBlankPageUrl(),
     // don't bother opening a new tab to do this.
+    console.log("_sUD: called addTrustedTab");
     const tab = gBrowser.addTrustedTab("about:home", {
       relatedToCurrent: true,
     });
@@ -4319,7 +4320,12 @@ BrowserGlue.prototype = {
     // XXX is there any possibility this could race with session restore and
     // the listener could be called for a different tab?
     await new Promise(resolve => {
-      gBrowser.addEventListener("TabSwitchDone", resolve, { once: true });
+      let eventListener = function() {
+        console.log("_sUD: inside eventListener, about to resolve");
+        resolve();
+      };
+      console.log("_sUD: called AddEventListener inside promise");
+      gBrowser.addEventListener("TabSwitchDone", eventListener, { once: true });
       gBrowser.selectedTab = tab;
     });
 
@@ -4328,6 +4334,7 @@ BrowserGlue.prototype = {
       type: "SHOW_SPOTLIGHT",
       data,
     };
+    console.log("_sUD: about to call handleAction");
     lazy.SpecialMessageActions.handleAction(config, tab.linkedBrowser);
   },
 

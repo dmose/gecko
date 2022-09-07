@@ -118,6 +118,7 @@ SubDialog.prototype = {
     { features, closingCallback, closedCallback, sizeTo } = {},
     ...aParams
   ) {
+    console.log("in SubDialog.open");
     if (["available", "limitheight"].includes(sizeTo)) {
       this._box.setAttribute("sizeto", sizeTo);
     }
@@ -338,6 +339,7 @@ SubDialog.prototype = {
   },
 
   _onContentLoaded(aEvent) {
+    console.log("in SD._onContentLoaded");
     if (
       aEvent.target != this._frame ||
       aEvent.target.contentWindow.location == "about:blank"
@@ -974,6 +976,7 @@ class SubDialogManager {
     } = {},
     ...aParams
   ) {
+    console.log("in SubDialogManager.open");
     let allowDuplicates =
       allowDuplicateDialogs != null
         ? allowDuplicateDialogs

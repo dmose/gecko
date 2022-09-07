@@ -71,6 +71,8 @@ const Spotlight = {
     const unload = await lazy.RemoteImages.patchMessage(message.content.logo);
 
     if (message.content?.modal === "tab") {
+      //debugger;
+      console.log("sSD: about to call getTabDialogBox");
       let { closedPromise } = win.gBrowser.getTabDialogBox(browser).open(
         spotlight_url,
         {
@@ -79,11 +81,13 @@ const Spotlight = {
         },
         [message.content, params]
       );
+      console.log("sSD: about to await closedPromise");
       await closedPromise;
     } else {
       await win.gDialogBox.open(spotlight_url, [message.content, params]);
     }
 
+    console.log("sSD: about to check unload");
     if (unload) {
       unload();
     }

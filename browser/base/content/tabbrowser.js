@@ -3334,11 +3334,15 @@
      * or close tabs.
      */
     _fireTabOpen(tab, eventDetail) {
+      console.log("in _fireTabOpen");
+      console.log("eventDetail", eventDetail);
+      console.trace();
       delete tab.initializingTab;
       let evt = new CustomEvent("TabOpen", {
         bubbles: true,
         detail: eventDetail || {},
       });
+      console.log("about to dispatch");
       tab.dispatchEvent(evt);
     },
 

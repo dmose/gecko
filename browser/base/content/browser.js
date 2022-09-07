@@ -9054,6 +9054,7 @@ const SafeBrowsingNotificationBox = {
  */
 class TabDialogBox {
   constructor(browser) {
+    console.log("in TabDialogBox constructor");
     this._weakBrowserRef = Cu.getWeakReference(browser);
 
     // Create parent element for tab dialogs
@@ -9114,8 +9115,15 @@ class TabDialogBox {
     } = {},
     ...aParams
   ) {
+    console.log("in TabDialogBox.open");
     let resolveClosed;
-    let closedPromise = new Promise(resolve => (resolveClosed = resolve));
+    let closedPromise = new Promise(resolve => {
+      function loggingResolve() {
+        console.log("in TBD.o loggingResolve; about to resolve");
+        resolve();
+      }
+      return (resolveClosed = loggingResolve);
+    });
     // Get the dialog manager to open the prompt with.
     let dialogManager =
       modalType === Ci.nsIPrompt.MODAL_TYPE_CONTENT
@@ -9131,6 +9139,7 @@ class TabDialogBox {
     }
 
     let closingCallback = event => {
+      console.log("in TDB.o.closingCallback()");
       if (!hasDialogs()) {
         this._onLastDialogClose();
       }
@@ -9144,6 +9153,7 @@ class TabDialogBox {
       sizeTo = "limitheight";
     }
 
+    console.log("TDB.o: about to call dialogManager.open");
     // Open dialog and resolve once it has been closed
     let dialog = dialogManager.open(
       aURL,
@@ -9156,6 +9166,7 @@ class TabDialogBox {
       },
       ...aParams
     );
+    console.log("TDB.o: dialogManager.open called");
 
     // Marking the dialog externally, instead of passing it as an option.
     // The SubDialog(Manager) does not care about navigation.

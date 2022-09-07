@@ -2404,10 +2404,12 @@ var BrowserTestUtils = {
     uri = "chrome://global/content/commonDialog.xhtml",
     options = { callback: null, isSubDialog: false }
   ) {
+    console.log("entered BTU.promiseAlertDialogOpen");
     let win;
     if (uri == "chrome://global/content/commonDialog.xhtml") {
       [win] = await TestUtils.topicObserved("common-dialog-loaded");
     } else if (options.isSubDialog) {
+      console.log("BTU.pADO: about to await subdialog-loaded");
       [win] = await TestUtils.topicObserved("subdialog-loaded");
     } else {
       // The test listens for the "load" event which guarantees that the alert
@@ -2419,6 +2421,7 @@ var BrowserTestUtils = {
     }
 
     if (options.callback) {
+      console.log("BTU.pADO: about to await options.callback");
       await options.callback(win);
       return win;
     }

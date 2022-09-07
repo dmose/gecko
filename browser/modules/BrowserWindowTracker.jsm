@@ -66,6 +66,7 @@ function _updateCurrentBrowsingContextID(browser) {
 function _handleEvent(event) {
   switch (event.type) {
     case "TabBrowserInserted":
+      console.log("BWT: TabBrowserInserted received");
       if (
         event.target.ownerGlobal.gBrowser.selectedBrowser ===
         event.target.linkedBrowser
@@ -74,9 +75,11 @@ function _handleEvent(event) {
       }
       break;
     case "TabSelect":
+      console.log("BWT: TabSelect received");
       _updateCurrentBrowsingContextID(event.target.linkedBrowser);
       break;
     case "activate":
+      console.log("BWT: activate received");
       WindowHelper.onActivate(event.target);
       break;
     case "unload":
