@@ -166,6 +166,7 @@ SubDialog.prototype = {
         this.close();
       }
       let args = Array.from(arguments);
+      console.log("SD.o: about to call this._closingPromise");
       this._closingPromise.then(() => {
         this.open.apply(this, args);
       });
