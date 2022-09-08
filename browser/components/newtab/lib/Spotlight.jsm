@@ -83,6 +83,7 @@ const Spotlight = {
       );
       console.log("sSD: about to await closedPromise");
       await closedPromise;
+      console.log("sSD: closedPromise resolved (dialog should have been opened and closed by now");
     } else {
       await win.gDialogBox.open(spotlight_url, [message.content, params]);
     }
@@ -114,6 +115,7 @@ const Spotlight = {
       );
     }
 
+    console.log("sSD: about to return");
     return true;
   },
 };

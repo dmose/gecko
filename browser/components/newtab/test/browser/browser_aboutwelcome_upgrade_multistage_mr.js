@@ -79,6 +79,7 @@ async function openMRUpgradeWelcome(screensToTest) {
 
   console.log("omRUW: about to await dialogOpenPromise");
   let browser = await dialogOpenPromise;
+  console.log("omRUW: dialogOpenPromise resolved, about to return");
 
   OnboardingMessageProvider.getUpgradeMessage.restore();
   return Promise.resolve(browser);

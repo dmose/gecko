@@ -2411,6 +2411,7 @@ var BrowserTestUtils = {
     } else if (options.isSubDialog) {
       console.log("BTU.pADO: about to await subdialog-loaded");
       [win] = await TestUtils.topicObserved("subdialog-loaded");
+      console.log("BTU.pADO: subdialog-loaded fired");
     } else {
       // The test listens for the "load" event which guarantees that the alert
       // class has already been added (it is added when "DOMContentLoaded" is
@@ -2419,7 +2420,6 @@ var BrowserTestUtils = {
         return win.document.documentURI === uri;
       });
     }
-
     if (options.callback) {
       console.log("BTU.pADO: about to await options.callback");
       await options.callback(win);

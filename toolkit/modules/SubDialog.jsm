@@ -135,17 +135,21 @@ SubDialog.prototype = {
 
     if (closingCallback) {
       this._closingCallback = (...args) => {
+        console.log("SD.o about to call closingCallback");
         closingCallback.apply(dialog, args);
       };
     }
     if (closedCallback) {
       this._closedCallback = (...args) => {
+        console.log("Sd.o about to call closedCallback");
         closedCallback.apply(dialog, args);
       };
     }
 
     // Wait until frame is ready to prevent browser crash in tests
+    console.log("SD.o: about to await this._frameCreated");
     await this._frameCreated;
+    console.log("SD.o: this._frameCreated resolved");
 
     if (!this._frame.contentWindow) {
       // Given the binding constructor execution is asynchronous, and "load"
@@ -178,6 +182,7 @@ SubDialog.prototype = {
       dialogFeatures = `${features},${dialogFeatures}`;
     }
 
+    console.log("SD.o: about to call this._window.openDialog");
     dialog = this._window.openDialog(
       aURL,
       `dialogFrame-${this._id}`,
