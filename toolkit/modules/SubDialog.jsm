@@ -208,6 +208,8 @@ SubDialog.prototype = {
    * Close the dialog and mark it as aborted.
    */
   abort() {
+    console.log("in SubDialog.abort, about to fire dialogclosing");
+    console.trace();
     this._closingEvent = new CustomEvent("dialogclosing", {
       bubbles: true,
       detail: { dialog: this, abort: true },
