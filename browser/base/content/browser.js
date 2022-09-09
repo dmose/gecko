@@ -5378,7 +5378,7 @@ var XULBrowserWindow = {
   onLocationChange(aWebProgress, aRequest, aLocationURI, aFlags, aIsSimulated) {
     console.log(
       "in XULBrowserWindow.onLocationChange, args = ",
-      Array.from(arguments)
+      Array.from(arguments).toString()
     );
 
     var location = aLocationURI ? aLocationURI.spec : "";
