@@ -5376,7 +5376,13 @@ var XULBrowserWindow = {
    *   nsIWebProgressListener.onLocationChange; see bug 1478348.
    */
   onLocationChange(aWebProgress, aRequest, aLocationURI, aFlags, aIsSimulated) {
+    console.log(
+      "in XULBrowserWindow.onLocationChange, args = ",
+      Array.from(arguments)
+    );
+
     var location = aLocationURI ? aLocationURI.spec : "";
+    console.log(`XBW.oLC: location = ${location}`);
 
     UpdateBackForwardCommands(gBrowser.webNavigation);
 
@@ -9250,6 +9256,14 @@ class TabDialogBox {
    * the current browser.
    */
   onLocationChange(aWebProgress, aRequest, aLocation, aFlags) {
+    console.log(
+      "in TabDialogBox.onLocationChange, args = ",
+      Array.from(arguments)
+    );
+
+    var location = aLocation ? aLocation.spec : "";
+    console.log(`TDB.oLC: location = ${location}`);
+
     if (
       !aWebProgress.isTopLevel ||
       aFlags & Ci.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT

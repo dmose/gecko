@@ -6663,6 +6663,14 @@
     /* eslint-enable complexity */
 
     onLocationChange(aWebProgress, aRequest, aLocation, aFlags) {
+      console.log(
+        "in TabProgressListener.onLocationChange, args = ",
+        Array.from(arguments)
+      );
+
+      const location = aLocation ? aLocation.spec : "";
+      console.log(`TPL.oLC: location = ${location}`);
+
       // OnLocationChange is called for both the top-level content
       // and the subframes.
       let topLevel = aWebProgress.isTopLevel;
