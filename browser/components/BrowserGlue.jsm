@@ -4310,32 +4310,43 @@ BrowserGlue.prototype = {
 
     // Nice to have -- if the already-selected tab matches isBlankPageUrl(),
     // don't bother opening a new tab to do this.
+    let tab;
+    gBrowser.addTabsProgressListener({
+      onLocationChange(
+        aBrowser,
+        aWebProgress,
+        aRequest,
+        aLocationURI,
+        aFlags,
+        aIsSimulated
+      ) {
+        console.log(
+          "in addTabsProgressListener.onLocationChange, args = ",
+          Array.from(arguments).toString()
+        );
+
+        var location = aLocationURI ? aLocationURI.spec : "";
+        console.log(`aTPL.oLC: location = ${location}`);
+
+        if (aBrowser === tab.linkedBrowser) {
+          console.log("browsers are the same");
+          // Now that the tab is ready, show the upgrade dialog in it
+          const config = {
+            type: "SHOW_SPOTLIGHT",
+            data,
+          };
+          console.log("_sUD: about to call handleAction");
+          lazy.SpecialMessageActions.handleAction(config, tab.linkedBrowser);
+        }
+      },
+    });
+
     console.log("_sUD: called addTrustedTab");
-    const tab = gBrowser.addTrustedTab("about:home", {
+    tab = gBrowser.addTrustedTab("about:home", {
       relatedToCurrent: true,
     });
 
-    // Select a tab, and wait for it to be selected.
-    //
-    // XXX is there any possibility this could race with session restore and
-    // the listener could be called for a different tab?
-    await new Promise(resolve => {
-      let eventListener = function() {
-        console.log("_sUD: inside eventListener, about to resolve");
-        resolve();
-      };
-      console.log("_sUD: called AddEventListener inside promise");
-      gBrowser.addEventListener("TabSwitchDone", eventListener, { once: true });
-      gBrowser.selectedTab = tab;
-    });
-
-    // Now that the tab is ready, show the upgrade dialog in it
-    const config = {
-      type: "SHOW_SPOTLIGHT",
-      data,
-    };
-    console.log("_sUD: about to call handleAction");
-    lazy.SpecialMessageActions.handleAction(config, tab.linkedBrowser);
+    gBrowser.selectedTab = tab;
   },
 
   async _maybeShowDefaultBrowserPrompt() {
