@@ -1105,7 +1105,38 @@ Tester.prototype = {
     };
 
     let task;
-    while ((task = currentScope.__tasks.shift())) {
+
+    // XXX next steps:
+    //   draft position/exp doc
+    //   draft impl plan
+    //     -[ ] figure out DevX, SheriffX, etc
+    //     -[ ] pull in seedable random number gen
+    //     -[ ] seed random number gen with Math.random()?, log & track
+    //     -[ ] on failure, log possible command for reproducing using passed-in
+    //          seed
+    //     -[ ] allow seed to be passed in
+    //     -[ ] add mechanism for a dir to opt-in
+    //     -[ ]
+
+    // -- instead of running them backwards, pull in seedable random number
+    //
+    // MIT-license seedable random number generator
+    //
+    // https://github.com/skratchdot/random-seed/blob/master/index.js
+
+    function get_next_task() {
+      let [task] = currentScope.__tasks.splice(
+        currentScope.__tasks.length - 1, // run them backwards
+        1
+      );
+      console.log("task = ", task);
+      console.log("__tasks.length", currentScope.__tasks.length);
+      return task;
+    }
+
+    console.log("__tasks.length", currentScope.__tasks.length);
+
+    while ((task = get_next_task())) {
       if (
         task.__skipMe ||
         (currentScope.__runOnlyThisTask &&
