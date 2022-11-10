@@ -41,7 +41,7 @@ const log = (() => {
     "resource://gre/modules/Console.sys.mjs"
   );
   return new ConsoleAPI({
-    maxLogLevel: "warn",
+    maxLogLevel: "all",
     maxLogLevelPref: "services.settings.loglevel",
     prefix: "services.settings",
   });

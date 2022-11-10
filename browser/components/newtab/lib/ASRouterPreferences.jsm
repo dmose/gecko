@@ -65,7 +65,7 @@ class _ASRouterPreferences {
         "resource://gre/modules/Console.sys.mjs"
       );
       let consoleOptions = {
-        maxLogLevel: "error",
+        maxLogLevel: "all",
         maxLogLevelPref: DEBUG_PREF,
         prefix: "ASRouter",
       };

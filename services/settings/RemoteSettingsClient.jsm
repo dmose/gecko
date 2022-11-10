@@ -474,6 +474,11 @@ class RemoteSettingsClient extends EventEmitter {
 
       if (this._importingPromise) {
         try {
+          lazy.console.info(
+            `${this.identifier}: about to await this._importingPromise`
+          );
+          lazy.console.trace();
+
           if (await this._importingPromise) {
             // No need to verify signature, because either we've just loaded a trusted
             // dump (here or in a parallel call), or it was verified during sync.
@@ -584,6 +589,7 @@ class RemoteSettingsClient extends EventEmitter {
         },
       }
     );
+    lazy.console.debug(`fetchLatestChanges returned`);
     if (changes.length === 0) {
       throw new RemoteSettingsClient.UnknownCollectionError(this.identifier);
     }
@@ -606,6 +612,7 @@ class RemoteSettingsClient extends EventEmitter {
    * @return {Promise}                  which rejects on sync or process failure.
    */
   async maybeSync(expectedTimestamp, options = {}) {
+    lazy.console.debug("entered maybeSync");
     // Should the clients try to load JSON dump? (mainly disabled in tests)
     const {
       loadDump = lazy.Utils.LOAD_DUMPS,
@@ -713,6 +720,7 @@ class RemoteSettingsClient extends EventEmitter {
           // Local data is either outdated or tampered.
           // In both cases we will fetch changes from server,
           // and make sure we overwrite local data.
+          lazy.console.debug(`about to await this._importChanges`);
           syncResult = await this._importChanges(
             localRecords,
             collectionLastModified,

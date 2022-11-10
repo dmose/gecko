@@ -333,7 +333,12 @@ const MessageLoaderUtils = {
   },
 
   _getRemoteSettingsMessages(bucket) {
-    return RemoteSettings(bucket).get();
+    lazy.ASRouterPreferences.console.debug("entering _getRemoteSettingsMessages: ", bucket);
+    lazy.ASRouterPreferences.console.trace();
+
+    let r = RemoteSettings(bucket).get();
+    lazy.ASRouterPreferences.console.debug("leaving _getRemoteSettingsMessages: ", bucket);
+    return r;
   },
 
   /**
@@ -415,6 +420,13 @@ const MessageLoaderUtils = {
   },
 
   _handleRemoteSettingsUndesiredEvent(event, providerId, dispatchCFRAction) {
+
+    lazy.ASRouterPreferences.console.debug(
+      "entering _handleRemoteSettingsUndesiredEvent: ",
+      event,
+      providerId
+    );
+
     if (dispatchCFRAction) {
       dispatchCFRAction(
         ac.ASRouterUserEvent({
@@ -737,10 +749,20 @@ class _ASRouter {
    * @memberof _ASRouter
    */
   _resetInitialization() {
+    lazy.ASRouterPreferences.console.debug(
+      "in _resetInitialization"
+    );
+    lazy.ASRouterPreferences.console.trace();
+
     this.initialized = false;
     this.initializing = false;
     this.waitForInitialized = new Promise(resolve => {
       this._finishInitializing = () => {
+        lazy.ASRouterPreferences.console.debug(
+          "in _finishInitializing"
+        );
+        lazy.ASRouterPreferences.console.trace();
+
         this.initialized = true;
         this.initializing = false;
         resolve();
@@ -895,6 +917,9 @@ class _ASRouter {
       await this.setState(this._removePreviewEndpoint(newState));
       await this.cleanupImpressions();
     }
+    lazy.ASRouterPreferences.console.debug(
+      "returning from loadMessagesFromAllProviders"
+    );
     return this.state;
   }
 
@@ -1493,6 +1518,11 @@ class _ASRouter {
           );
           return false;
         }
+
+        lazy.ASRouterPreferences.console.debug(
+          m.id,
+          " NOT FILTERED"
+        );
 
         if (shouldCache !== false) {
           shouldCache = JEXL_PROVIDER_CACHE.has(m.provider);
