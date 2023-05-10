@@ -42,3 +42,5 @@ legacy.telemetry:
       - 'events'
       - 'newtab'
       - 'baseline'
+      - 'about-welcome'
+      - 'as-router'
