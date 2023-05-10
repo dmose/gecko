@@ -598,6 +598,29 @@ const TEST_GLOBAL = {
   getFxAccountsSingleton() {},
   AboutNewTab: {},
   Glean: {
+    asrouter: {
+      pingType: {
+        set() {},
+      },
+      action: {
+        set() {},
+      },
+      messageId: {
+        set() {},
+      },
+      cfrAction: {
+        set() {},
+      },
+      addonVersion: {
+        set() {},
+      },
+      event: {
+        set() {},
+      },
+      invalidKeys: {
+        add() {},
+      },
+    },
     newtab: {
       opened: {
         record() {},
@@ -665,6 +688,12 @@ const TEST_GLOBAL = {
     },
   },
   GleanPings: {
+    asroutertest: {
+      submit() {},
+    },
+    asroutertestnoid: {
+      submit() {},
+    },
     newtab: {
       submit() {},
     },
