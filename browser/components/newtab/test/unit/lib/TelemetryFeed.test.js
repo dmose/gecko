@@ -2087,7 +2087,7 @@ describe("TelemetryFeed", () => {
 
       assert.calledOnce(instance.sendStructuredIngestionEvent);
     });
-    it("should console.error on unknown pingTypes", async () => {
+    it("should console.error and not submit pings on unknown pingTypes", async () => {
       const data = {
         action: "unknown_event",
         event: "IMPRESSION",
@@ -2095,12 +2095,51 @@ describe("TelemetryFeed", () => {
       };
       instance = new TelemetryFeed();
       sandbox.spy(instance, "sendStructuredIngestionEvent");
+      sandbox.spy(GleanPings.asroutertest, "submit");
+      sandbox.spy(GleanPings.asroutertestnoid, "submit");
 
       await instance.handleASRouterUserEvent({ data });
 
       assert.calledOnce(global.console.error);
       assert.notCalled(instance.sendStructuredIngestionEvent);
+      assert.notCalled(GleanPings.asroutertest.submit);
+      assert.notCalled(GleanPings.asroutertestnoid.submit);
     });
+    it("should record Glean data for known keys for known pingType", async () => {
+      const data = {
+        action: "onboarding_user_event",
+        event: "IMPRESSION",
+        message_id: "12345",
+      };
+      instance = new TelemetryFeed();
+      sandbox.spy(Glean.asrouter.pingType, "set");
+      sandbox.spy(Glean.asrouter.action, "set");
+      sandbox.spy(Glean.asrouter.messageId, "set");
+      // And any other pieces of data we want to be sure are or aren't set.
+
+      await instance.handleASRouterUserEvent({ data });
+
+      assert.calledWith(Glean.asrouter.pingType.set, "onboarding");
+      assert.notCalled(Glean.asrouter.action.set);
+      assert.calledWith(Glean.asrouter.messageId.set, data.message_id);
+    });
+    it("should submit a Glean ping on known pingType", async () => {
+      const data = {
+        action: "onboarding_user_event",
+        event: "IMPRESSION",
+        message_id: "12345",
+      };
+      instance = new TelemetryFeed();
+      sandbox.spy(GleanPings.asroutertestnoid, "submit");
+
+      await instance.handleASRouterUserEvent({ data });
+
+      assert.calledOnce(GleanPings.asroutertestnoid.submit);
+    });
+    // Additional cases to cover:
+    // * GleanPings.asroutertest (with the id)
+    // * Known pingType with unknown keys
+    //   (check the contents of Glean.asrouter.invalidKeys)
   });
   describe("#isInCFRCohort", () => {
     it("should return false if there is no CFR experiment registered", () => {
