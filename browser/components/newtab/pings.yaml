@@ -29,3 +29,40 @@ newtab:
     - mmccorquodale@mozilla.com
     - anicholson@mozilla.com
     - najiang@mozilla.com
+
+as-router:
+  description: |
+    This is a temporary ping representing single events triggered by the
+    spotlight messaging system. It's goal is to collect some sample data
+    and test the glean interface for collecting this kind of data.
+  reasons:
+    telemetry_feed: |
+      The spotlight process was completed.
+  include_client_id: true
+  send_if_empty: false
+  bugs:
+    - https://bugzilla.mozilla.org/show_bug.cgi?id=1766887
+  data_reviews:
+    - https://bugzilla.mozilla.org/show_bug.cgi?id=1766887
+  notification_emails:
+    - pmcmanis@mozilla.com
+    - dmosedale@mozilla.com
+
+as-router-no-id:
+  description: |
+    This is a temporary ping representing single events triggered by the
+    spotlight messaging system. It's goal is to collect some sample data
+    and test the glean interface for collecting this kind of data. Does
+    not send client_id.
+  reasons:
+    telemetry_feed: |
+      The spotlight process was completed.
+  include_client_id: false
+  send_if_empty: false
+  bugs:
+    - https://bugzilla.mozilla.org/show_bug.cgi?id=1766887
+  data_reviews:
+    - https://bugzilla.mozilla.org/show_bug.cgi?id=1766887
+  notification_emails:
+    - pmcmanis@mozilla.com
+    - dmosedale@mozilla.com

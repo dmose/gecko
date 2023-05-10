@@ -569,3 +569,133 @@ pocket:
         type: string
     send_in_pings:
       - newtab
+
+asrouter:
+  ping_type:
+    type: string
+    lifetime: ping
+    description: >
+      Type of the ping, such as "impression-stats".
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+      - as-router-no-id
+
+  action:
+    type: string
+    lifetime: ping
+    description: >
+      What type of spotlight event. One of "IMPRESSION" or "DISMISS".
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+      - as-router-no-id
+
+  message_id:
+    type: string  # text not currently implemented, so this will error
+    lifetime: ping
+    description: >
+      This reports when the user interacts with the Messaging System
+      Spotlight component. Similar policy applied as for the Infobar
+      messages. client_id is reported in all the channels. Currently
+      only used in experiments.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+      - as-router-no-id
+
+  cfr_action:
+    type: string  # text not currently implemented, so this will error
+    lifetime: ping
+    description: >
+      CFR action
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+      - as-router-no-id
+
+  addon_version:
+    type: string  # text not currently implemented, so this will error
+    lifetime: ping
+    description: >
+      figure out what this data actually is
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+      - as-router-no-id
+
+  event:
+    type: string  # text not currently implemented, so this will error
+    lifetime: ping
+    description: >
+      the type of event being logged.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+      - as-router-no-id
+
+  invalid_keys:
+    type: string_list  # text not currently implemented, so this will error
+    lifetime: ping
+    description: >
+      keys found in the ping that were not defined. Dynamic labels.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+      - as-router-no-id
