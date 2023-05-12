@@ -149,14 +149,51 @@ class AboutWelcomeParent extends JSWindowActorParent {
     }
     this.RegionHomeObserver?.stop();
 
-    lazy.Telemetry.sendTelemetry({
+    const ping = {
       event: "SESSION_END",
       event_context: {
         reason: this.AboutWelcomeObserver.terminateReason,
         page: "about:welcome",
       },
       message_id: this.AWMessageId,
+    };
+
+    lazy.Telemetry.sendTelemetry(ping);
+
+    // Data here is a dictionary with mixed data types, including a dictionary,
+    // so flatten it into a depth = 1 object that can be sent to
+    // setGleanMetricsAndSubmit. Note that we have used the metrics.yaml file
+    // to define all of the fields in a way that when send this object it will
+    // map with minimal additional effort.
+    ping.reason = this.AboutWelcomeObserver.terminateReason;
+    ping.page = "about:welcome";
+    delete ping.event_context;
+
+    this.setGleanMetricsAndSubmit(ping, "SESSION_END");
+  }
+
+  snakeToCamelCase(s) {
+    return s.toString().replace(/_([a-z])/gi, (_str, group) => {
+      return group.toUpperCase();
     });
+  }
+
+  setGleanMetricsAndSubmit(ping, type) {
+    // Set the glean metrics by iterating the ping object's keys
+    Glean.onboardingMessaging.pingType.set(type);
+    for (const key of Object.keys(ping)) {
+      const camelKey = this.snakeToCamelCase(key);
+      try {
+        // Note that Glean converts snake/dash-snake case to camelCase.
+        Glean.onboardingMessaging[camelKey].set(ping[key]);
+      } catch (e) {
+        Glean.onboardingMessaging.invalidKeys.add(camelKey);
+      }
+    }
+    // Notice here pings exist under GleanPings. "about_welcome" here
+    // is a reason, and MUST match one of the reason entries in the pings.yaml
+    // specification.
+    GleanPings.aboutWelcome.submit("about_welcome");
   }
 
   /**
@@ -183,6 +220,32 @@ class AboutWelcomeParent extends JSWindowActorParent {
         return lazy.FxAccounts.config.promiseMetricsFlowURI("aboutwelcome");
       case "AWPage:TELEMETRY_EVENT":
         lazy.Telemetry.sendTelemetry(data);
+
+        // Flatten the data into a single level object that can be sent to
+        // setGleanMetricsAndSubmit.
+        let ping = {};
+        // We should not mutate the keys/values of the source object in case
+        // the source object needs to be used again later.
+        Object.assign(ping, data);
+        let objContext = {};
+        // Event Context is typically a string at the point we get it in
+        // onContentMessage, but it can be object, so handle that here.
+        if (ping.event_context && typeof ping.event_context === "string") {
+          objContext = JSON.parse(ping.event_context);
+        } else {
+          objContext = ping.event_context;
+        }
+
+        if (Object.keys(objContext).includes("source")) {
+          ping.source = objContext.source;
+        }
+        if (Object.keys(objContext).includes("page")) {
+          ping.page = objContext.page;
+        }
+        delete ping.event_context;
+
+        this.setGleanMetricsAndSubmit(ping, type);
+
         break;
       case "AWPage:GET_ATTRIBUTION_DATA":
         let attributionData = await lazy.AboutWelcomeDefaults.getAttributionContent();

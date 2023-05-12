@@ -995,12 +995,60 @@ class TelemetryFeed {
     }
   }
 
+  snakeToCamelCase(s) {
+    return s.toString().replace(/_([a-z])/gi, (_str, group) => {
+      return group.toUpperCase();
+    });
+  }
+
+  /**
+   * Iterate through the keys of the finished ping object to assign them to
+   * Glean metrics. Potentially fragile since any metric not defined in a
+   * metrics.yaml file will not be set, but instead the key that you
+   * attempted to set will be placed in the `invalidKeys` string list.
+   *
+   * @param {Object} ping  Post policy-applied object with remaining fields
+   * @param {String} pingType  Type of the ping, such as "impression-stats".
+   */
+  setGleanMetricsAndSend(ping, pingtype) {
+    // We always know pingtype so we set that before iterating
+    Glean.asrouter.pingType.set(pingtype);
+    // Set the Glean metrics by iterating the ping object's keys
+    for (const key of Object.keys(ping)) {
+      const camelKey = this.snakeToCamelCase(key);
+      try {
+        // Note that Glean converts snake/dash-snake case to camelCase.
+        Glean.asrouter[camelKey].set(ping[key]);
+      } catch (e) {
+        Glean.asrouter.invalidKeys.add(camelKey);
+      }
+    }
+
+    // ClientID cannot be toggled on and off for a Glean ping. It is either on
+    // or off as specified in the metrics.yaml file for the ping. Because there
+    // are cases where cannot send it, we have two pings, one with and one
+    // without.
+    if ("client_id" in Object.keys(ping)) {
+      GleanPings.asRouter.submit("telemetry_feed");
+      return;
+    }
+    // If we don't find any case where we can send with a clientid, default
+    // to sending data without one.
+    GleanPings.asRouterNoId.submit("telemetry_feed");
+  }
+
   async handleASRouterUserEvent(action) {
     const { ping, pingType } = await this.createASRouterEvent(action);
     if (!pingType) {
       console.error("Unknown ping type for ASRouter telemetry");
       return;
     }
+
+    // After the policy has been applied by createASRouterEvent, we can send
+    // it to this function which will set all of the metrics and submit the
+    // ping right away.
+    this.setGleanMetricsAndSend(ping, pingType);
+
     this.sendStructuredIngestionEvent(
       ping,
       STRUCTURED_INGESTION_NAMESPACE_MS,
