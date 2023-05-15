@@ -29,3 +29,37 @@ newtab:
     - mmccorquodale@mozilla.com
     - anicholson@mozilla.com
     - najiang@mozilla.com
+
+as-router:
+  description: |
+    This is a ping representing single events triggered by the messaging system
+    and captures some pings from About:Welcome. It's goal is to collect some
+    sample data and test the glean interface for collecting this kind of data.
+  reasons:
+    telemetry_feed: |
+      The spotlight process was completed.
+  include_client_id: true
+  send_if_empty: false
+  bugs:
+    - https://bugzilla.mozilla.org/show_bug.cgi?id=1766887
+  data_reviews:
+    - https://bugzilla.mozilla.org/show_bug.cgi?id=1766887
+  notification_emails:
+    - pmcmanis@mozilla.com
+    - dmosedale@mozilla.com
+
+about-welcome:
+  description: |
+    This pings contains events triggered by the onboarding messaging system.
+  reasons:
+    about_welcome: |
+      The ping was sent by the about welcome dialog.
+  include_client_id: true
+  send_if_empty: false
+  bugs:
+    - https://bugzilla.mozilla.org/show_bug.cgi?id=1766887
+  data_reviews:
+    - https://bugzilla.mozilla.org/show_bug.cgi?id=1766887
+  notification_emails:
+    - pmcmanis@mozilla.com
+    - dmosedale@mozilla.com

@@ -569,3 +569,270 @@ pocket:
         type: string
     send_in_pings:
       - newtab
+
+asrouter:
+  ping_type:
+    type: string
+    lifetime: ping
+    description: >
+      Type of the ping, such as "impression-stats".
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+
+  action:
+    type: string
+    lifetime: ping
+    description: >
+      What type of spotlight event. One of "IMPRESSION" or "DISMISS".
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+
+  message_id:
+    type: text 
+    lifetime: ping
+    description: >
+      This reports when the user interacts with the Messaging System
+      Spotlight component. Similar policy applied as for the Infobar
+      messages.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - web_activity
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+
+  cfr_action:
+    type: text 
+    lifetime: ping
+    description: >
+      CFR action
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - web_activity
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+
+  addon_version:
+    type: string
+    lifetime: ping
+    description: >
+      figure out what this data actually is
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+
+  event:
+    type: string
+    lifetime: ping
+    description: >
+      the type of event being logged.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+
+  invalid_keys:
+    type: string_list
+    lifetime: ping
+    description: >
+      keys found in the ping that were not defined. Dynamic labels.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - as-router
+
+onboarding_messaging:
+  message_id:
+    description: >
+      Identifier for the message.
+    type: text
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - web_activity
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - about-welcome
+
+  event:
+    description: >
+      Can be one of "impression", "click", or "session_end"
+    type: string
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - about-welcome
+
+  event_context:
+    description: >
+      Stringified version of the entire ping_context field.
+    type: text
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - web_activity
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - about-welcome
+
+  ping_type:
+    description: >
+      Type of event the ping is capturing.
+    type: string
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - about-welcome
+
+  page:
+    description: >
+      Which page the event came from
+    type: string
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - about-welcome
+
+  source:
+    description: >
+      Which item was interacted with
+    type: string
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - about-welcome
+
+  reason:
+    description: >
+      Identifier for the message.
+    type: string
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - interaction
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - about-welcome
+
+  invalid_keys:
+    type: string_list
+    lifetime: ping
+    description: >
+      keys found in the ping that were not defined. Dynamic labels.
+    bugs:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_reviews:
+      - https://bugzilla.mozilla.org/show_bug.cgi?id=1825863
+    data_sensitivity:
+      - technical
+    notification_emails:
+      - pmcmanis@mozilla.com
+      - dmosedale@mozilla.com
+    expires: never
+    send_in_pings:
+      - about-welcome
