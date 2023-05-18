@@ -2087,7 +2087,7 @@ describe("TelemetryFeed", () => {
 
       assert.calledOnce(instance.sendStructuredIngestionEvent);
     });
-    it("should console.error on unknown pingTypes", async () => {
+    it("should console.error and not submit pings on unknown pingTypes", async () => {
       const data = {
         action: "unknown_event",
         event: "IMPRESSION",

@@ -104,6 +104,8 @@ const TEST_GLOBAL = {
     addMessageListener: (messageName, listener) => {},
     removeMessageListener: (messageName, listener) => {},
   },
+  // eslint-disable-next-line object-shorthand
+  AboutWelcomeTelemetry: function() {}, // NB: This is to mimic a ctor
   AddonManager: {
     getActiveAddons() {
       return Promise.resolve({ addons: [], fullData: false });
@@ -598,6 +600,41 @@ const TEST_GLOBAL = {
   getFxAccountsSingleton() {},
   AboutNewTab: {},
   Glean: {
+    asrouter: {
+      pingType: {
+        set() {},
+      },
+      action: {
+        set() {},
+      },
+      messageId: {
+        set() {},
+      },
+      cfrAction: {
+        set() {},
+      },
+      addonVersion: {
+        set() {},
+      },
+      event: {
+        set() {},
+      },
+      invalidKeys: {
+        add() {},
+      },
+      invalidNestedData: {
+        add() {},
+      },
+      clientId: {
+        set() {},
+      },
+      locale: {
+        set() {},
+      },
+      browserSessionId: {
+        set() {},
+      },
+    },
     newtab: {
       opened: {
         record() {},
@@ -665,6 +702,9 @@ const TEST_GLOBAL = {
     },
   },
   GleanPings: {
+    asRouter: {
+      submit() {},
+    },
     newtab: {
       submit() {},
     },

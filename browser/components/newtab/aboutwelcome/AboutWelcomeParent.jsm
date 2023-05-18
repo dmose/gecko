@@ -182,7 +182,7 @@ class AboutWelcomeParent extends JSWindowActorParent {
       case "AWPage:FXA_METRICS_FLOW_URI":
         return lazy.FxAccounts.config.promiseMetricsFlowURI("aboutwelcome");
       case "AWPage:TELEMETRY_EVENT":
-        lazy.Telemetry.sendTelemetry(data);
+        lazy.Telemetry.sendTelemetry({...data, pingType: type});
         break;
       case "AWPage:GET_ATTRIBUTION_DATA":
         let attributionData = await lazy.AboutWelcomeDefaults.getAttributionContent();
