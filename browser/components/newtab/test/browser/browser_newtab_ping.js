@@ -2,6 +2,8 @@
    http://creativecommons.org/publicdomain/zero/1.0/ */
 
 "use strict";
+// TODO(bug 1833453): Need a little extra time to clear pending pings.
+requestLongerTimeout(2);
 
 const { AboutNewTab } = ChromeUtils.import(
   "resource:///modules/AboutNewTab.jsm"
@@ -29,6 +31,12 @@ add_task(async function test_newtab_tab_close_sends_ping() {
   await SpecialPowers.pushPrefEnv({
     set: [["browser.newtabpage.activity-stream.telemetry", true]],
   });
+
+  // TODO(bug 1833453): Bounce data collection prefs to quickly clean things.
+  await SpecialPowers.pushPrefEnv({
+    set: [["telemetry.fog.test.localhost_port", 0]],
+  });
+  await SpecialPowers.popPrefEnv();
 
   Services.fog.testResetFOG();
   sendTriggerMessageSpy.resetHistory();
