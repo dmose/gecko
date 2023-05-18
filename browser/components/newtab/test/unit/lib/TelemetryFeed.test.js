@@ -2087,7 +2087,7 @@ describe("TelemetryFeed", () => {
 
       assert.calledOnce(instance.sendStructuredIngestionEvent);
     });
-    it("should console.error on unknown pingTypes", async () => {
+    it("should console.error and not submit pings on unknown pingTypes", async () => {
       const data = {
         action: "unknown_event",
         event: "IMPRESSION",
@@ -2095,11 +2095,87 @@ describe("TelemetryFeed", () => {
       };
       instance = new TelemetryFeed();
       sandbox.spy(instance, "sendStructuredIngestionEvent");
+      sandbox.spy(GleanPings.asRouter, "submit");
 
       await instance.handleASRouterUserEvent({ data });
 
       assert.calledOnce(global.console.error);
       assert.notCalled(instance.sendStructuredIngestionEvent);
+      assert.notCalled(GleanPings.asRouter.submit);
+    });
+    it("should record Glean data for known keys for known pingType", async () => {
+      const data = {
+        action: "onboarding_user_event",
+        event: "IMPRESSION",
+        message_id: "12345",
+      };
+      instance = new TelemetryFeed();
+      sandbox.spy(Glean.asrouter.pingType, "set");
+      sandbox.spy(Glean.asrouter.action, "set");
+      sandbox.spy(Glean.asrouter.messageId, "set");
+      // And any other pieces of data we want to be sure are or aren't set.
+
+      await instance.handleASRouterUserEvent({ data });
+
+      assert.calledWith(Glean.asrouter.pingType.set, "onboarding");
+      assert.notCalled(Glean.asrouter.action.set);
+      assert.calledWith(Glean.asrouter.messageId.set, data.message_id);
+    });
+    it("should submit a Glean ping on known pingType", async () => {
+      const data = {
+        action: "onboarding_user_event",
+        event: "IMPRESSION",
+        message_id: "12345",
+      };
+      instance = new TelemetryFeed();
+      sandbox.spy(GleanPings.asRouter, "submit");
+
+      await instance.handleASRouterUserEvent({ data });
+
+      assert.calledOnce(GleanPings.asRouter.submit);
+    });
+    it("should record unknown keys on known pingType with unknown keys", async () => {
+      const unknownKeyName = "some_unknown_key_i_guess";
+      const unknownKeyNameCamel = "someUnknownKeyIGuess";
+      const data = {
+        action: "onboarding_user_event",
+        event: "IMPRESSION",
+        message_id: "12345",
+        [unknownKeyName]: true,
+      };
+      instance = new TelemetryFeed();
+      sandbox.spy(Glean.asrouter.invalidKeys, "add");
+      sandbox.spy(GleanPings.asRouter, "submit");
+
+      await instance.handleASRouterUserEvent({ data });
+
+      assert.calledOnce(GleanPings.asRouter.submit);
+      assert.calledOnce(Glean.asrouter.invalidKeys.add);
+      assert.calledWith(Glean.asrouter.invalidKeys.add, unknownKeyNameCamel);
+    });
+    it("should record unknown nested data on known pingType with unknown keys", async () => {
+      const unknownKeyName = "some_unknown_key_i_guess";
+      const unknownKeyNameCamel = "someUnknownKeyIGuess";
+      const data = {
+        action: "onboarding_user_event",
+        event: "IMPRESSION",
+        message_id: "12345",
+        [unknownKeyName]: {},
+      };
+      instance = new TelemetryFeed();
+      sandbox.spy(Glean.asrouter.invalidKeys, "add");
+      sandbox.spy(Glean.asrouter.invalidNestedData, "add");
+      sandbox.spy(GleanPings.asRouter, "submit");
+
+      await instance.handleASRouterUserEvent({ data });
+
+      assert.calledOnce(GleanPings.asRouter.submit);
+      assert.notCalled(Glean.asrouter.invalidKeys.add);
+      assert.calledOnce(Glean.asrouter.invalidNestedData.add);
+      assert.calledWith(
+        Glean.asrouter.invalidNestedData.add,
+        unknownKeyNameCamel
+      );
     });
   });
   describe("#isInCFRCohort", () => {
