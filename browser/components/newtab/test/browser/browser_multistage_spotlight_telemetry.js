@@ -60,30 +60,58 @@ add_task(async function send_spotlight_as_page_in_telemetry() {
 });
 
 add_task(async function send_dismiss_event_telemetry() {
+  // Have to turn on AS telemetry for anything to be recorded.
+  await SpecialPowers.pushPrefEnv({
+    set: [["browser.newtabpage.activity-stream.telemetry", true]],
+  });
+  registerCleanupFunction(async () => {
+    await SpecialPowers.popPrefEnv();
+  });
+
   const messageId = "MULTISTAGE_SPOTLIGHT_MESSAGE";
   let message = (await PanelTestProvider.getMessages()).find(
     m => m.id === messageId
   );
   let browser = BrowserWindowTracker.getTopWindow().gBrowser.selectedBrowser;
   let sandbox = sinon.createSandbox();
-  let stub = sandbox.stub(AboutWelcomeTelemetry.prototype, "sendTelemetry");
+  sandbox
+    .stub(AboutWelcomeTelemetry.prototype, "pingCentre")
+    .value({ sendStructuredIngestionPing: () => {} });
+  let spy = sandbox.spy(AboutWelcomeTelemetry.prototype, "sendTelemetry");
   // send without a dispatch function so that default is used
+  let pingSubmitted = false;
   await showAndWaitForDialog({ message, browser }, async win => {
     await waitForClick("button.dismiss-button", win);
-    win.close();
+    await win.close();
+    GleanPings.messagingSystem.testBeforeNextSubmit(() => {
+      pingSubmitted = true;
+
+      Assert.equal(
+        messageId,
+        Glean.messagingSystem.messageId.testGetValue(),
+        "Glean was given the correct message_id"
+      );
+      Assert.equal(
+        "DISMISS",
+        Glean.messagingSystem.event.testGetValue(),
+        "Glean was given the correct event"
+      );
+    });
   });
 
   Assert.equal(
-    stub.lastCall.args[0].message_id,
+    spy.lastCall.args[0].message_id,
     messageId,
     "A dismiss event is called with the correct message id"
   );
 
   Assert.equal(
-    stub.lastCall.args[0].event,
+    spy.lastCall.args[0].event,
     "DISMISS",
     "A dismiss event is called with a top level event field with value 'DISMISS'"
   );
+
+  Assert.ok(pingSubmitted, "The Glean ping was submitted.");
 
   sandbox.restore();
 });
