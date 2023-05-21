@@ -7,10 +7,13 @@ const webpack = require("webpack");
 
 const PATHS = {
   // Where is the entry point for the unit tests?
-  testEntryFile: path.resolve(__dirname, "test/unit/unit-entry.js"),
+  testEntryFile: path.resolve(__dirname, "test/integration/unit-entry.js"),
 
   // A glob-style pattern matching all unit tests
-  testFilesPattern: "test/unit/**/*.js",
+  //testFilesPattern: "test/{unit,integration}/**/*.js",
+
+  // Do we want this to be a separate file or just formatted like the above?
+  testFilesPattern: "test/integration/**/*.js",
 
   // The base directory of all source files (used for path resolution in webpack importing)
   moduleResolveDirectory: __dirname,
