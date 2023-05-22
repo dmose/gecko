@@ -3,6 +3,13 @@
 
 "use strict";
 
+
+Services.prefs.setCharPref(
+  "browser.newtabpage.activity-stream.asrouter.debugLogLevel",
+  "debug"
+);
+Services.prefs.setCharPref("messaging-system.log", "debug");
+
 /**
  * Tests for the Glean version of onboarding telemetry.
  */
