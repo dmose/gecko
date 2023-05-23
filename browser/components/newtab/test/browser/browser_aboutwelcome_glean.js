@@ -137,11 +137,16 @@ add_task(async function test_welcome_telemetry() {
   sandbox
     .stub(AboutWelcomeTelemetry.prototype, "pingCentre")
     .value({ sendStructuredIngestionPing: () => {} });
+  // XXX check if rCF gets called once per file, not once per test
+  registerCleanupFunction(() => {
+    sandbox.restore();
+  });
 
   // Have to turn on AS telemetry for anything to be recorded.
   await SpecialPowers.pushPrefEnv({
     set: [["browser.newtabpage.activity-stream.telemetry", true]],
   });
+  // XXX check if rCF gets called once per file, not once per test
   registerCleanupFunction(async () => {
     await SpecialPowers.popPrefEnv();
   });
@@ -171,15 +176,13 @@ add_task(async function test_welcome_telemetry() {
     );
   });
 
-  let browser = await openAboutWelcome();
   // `openAboutWelcome` isn't synchronous wrt the onboarding flow impressing.
-  await TestUtils.waitForCondition(
+  let promiseFirstPingSubmitted = TestUtils.waitForCondition(
     () => pingSubmitted,
     "Ping was submitted, callback was called."
   );
-  registerCleanupFunction(() => {
-    sandbox.restore();
-  });
+  let browser = await openAboutWelcome();
+  await promiseFirstPingSubmitted;
 
   // Let's reset and assert some values in the next button click.
   pingSubmitted = false;
@@ -216,5 +219,5 @@ add_task(async function test_welcome_telemetry() {
     );
   });
   await onButtonClick(browser, "button.primary");
-  Assert.ok(pingSubmitted, "Ping was submitted, callback was called.");
+  Assert.ok(pingSubmitted, "Pings were submitted, callback was called.");
 });
