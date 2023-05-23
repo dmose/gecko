@@ -199,8 +199,6 @@ add_task(async function test_multistage_aboutwelcome_default() {
     "AboutWelcome MR message id joined with screen id"
   );
 
-  return;
-
   await test_screen_content(
     browser,
     "multistage step 2",
