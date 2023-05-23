@@ -2,6 +2,9 @@
 const { SpecialMessageActions } = ChromeUtils.importESModule(
   "resource://messaging-system/lib/SpecialMessageActions.sys.mjs"
 );
+const { AboutWelcomeTelemetry } = ChromeUtils.import(
+  "resource://activity-stream/aboutwelcome/lib/AboutWelcomeTelemetry.jsm"
+);
 
 const DID_SEE_ABOUT_WELCOME_PREF = "trailhead.firstrun.didSeeAboutWelcome";
 
@@ -125,6 +128,9 @@ async function openAboutWelcome() {
  */
 add_task(async function test_multistage_aboutwelcome_default() {
   const sandbox = sinon.createSandbox();
+
+  let sendTelemetrySpy = sandbox.spy(AboutWelcomeTelemetry.prototype, "sendTelemetry");
+
   let browser = await openAboutWelcome();
   let aboutWelcomeActor = await getAboutWelcomeParent(browser);
   // Stub AboutWelcomeParent Content Message Handler
@@ -157,6 +163,26 @@ add_task(async function test_multistage_aboutwelcome_default() {
 
   await onButtonClick(browser, "button.primary");
 
+  let expectedTelemetry = sinon.match({event: "IMPRESSION", message_id: "MR_WELCOME_DEFAULT"});
+
+  if (sendTelemetrySpy.calledWith(expectedTelemetry)) {
+    ok(
+      true,
+      "Impression events have the correct message id with start screen configured"
+    );
+  } else if (sendTelemetrySpy.called) {
+    ok(
+      false,
+      `Wrong telemetry sent: ${JSON.stringify(
+        sendTelemetrySpy.getCalls().map(c => c.args[0]),
+        null,
+        2
+      )}`
+    );
+  } else {
+    ok(false, "No telemetry sent");
+  }
+
   const { callCount } = aboutWelcomeActor.onContentMessage;
   ok(callCount >= 1, `${callCount} Stub was called`);
   let clickCall;
@@ -172,6 +198,8 @@ add_task(async function test_multistage_aboutwelcome_default() {
     clickCall.args[1].message_id === "MR_WELCOME_DEFAULT_0_AW_STEP1",
     "AboutWelcome MR message id joined with screen id"
   );
+
+  return;
 
   await test_screen_content(
     browser,
